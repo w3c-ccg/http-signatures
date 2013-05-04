@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+  <!ENTITY rfc2119 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
+  <!ENTITY rfc2616 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'>
+  <!ENTITY rfc2617 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml'>
+  <!ENTITY rfc3339 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3339.xml'>
+  <!ENTITY rfc5246 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml'>
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xsl' ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<?rfc toc="yes" ?>
+<?rfc sortrefs="yes" ?>
+<?rfc symrefs="yes" ?>
+<rfc category="std" ipr="trust200902" submissionType="independent" 
+     docName="draft-cavage-http-signatures-00">
+<front>
+ <title>HTTP Signatures</title>
+
+ <author initials="M.C." surname="Cavage" fullname="Mark Cavage">
+  <organization>Joyent</organization>
+  <address>
+   <postal>
+    <street>One Embarcadero Center</street>
+    <street>9th Floor</street>
+    <city>San Francisco</city> <region>CA</region>
+    <code>94111</code>
+    <country>US</country>
+   </postal>
+   <phone>+1 ??? ??? ????</phone>
+   <email>mark.cavage@joyent.com</email>
+   <uri>http://www.joyent.com/</uri>
+  </address>
+ </author>
+
+ <author initials="M.S." surname="Sporny" fullname="Manu Sporny">
+  <organization>Digital Bazaar</organization>
+  <address>
+   <postal>
+    <street>1700 Kraft Drive</street>
+    <street>Suite 2408</street>
+    <city>Blacksburg</city> <region>VA</region>
+    <code>24060</code>
+    <country>US</country>
+   </postal>
+   <phone>+1 540 961 4469</phone>
+   <email>msporny@digitalbazaar.com</email>
+   <uri>http://manu.sporny.org/</uri>
+  </address>
+ </author>
+
+ <date month="May" year="2013" />
+ <area>Security</area>
+ <workgroup></workgroup>
+ <keyword>HTTP</keyword>
+ <keyword>digital signature</keyword>
+ <keyword>PKI</keyword>
+ <abstract>
+ <t>
+This document describes a way to add origin authentication, message integrity, 
+and replay resistance to HTTP requests. It is intended to be used over 
+the HTTPS protocol.
+ </t>
+ </abstract>
+</front>
+
+<middle>
+
+ <section anchor="intro" title="Introduction">
+  <t>
+This protocol is intended to provide a standard way for clients to sign HTTP
+requests.  RFC2617 (HTTP Authentication) defines Basic and Digest authentication
+mechanisms, and RFC5246 (TLS 1.2) defines client-auth, both of which are widely
+employed on the Internet today.  However, it is common place that the burdens of
+PKI prevent web service operators from deploying that methodoloy, and so many
+fall back to Basic authentication, which has poor security characteristics.
+  </t>
+
+  <t>
+Additionally, OAuth provides a fully-specified alternative for authorization
+of web service requests, but is not (always) ideal for machine to machine
+communication, as the key acquisition steps (generally) imply a fixed
+infrastructure that may not make sense to a service provider (e.g., symmetric
+keys).
+  </t>
+
+  <t>
+Several web service providers have invented their own schemes for signing
+HTTP requests, but to date, none have been placed in the public domain as a
+standard.  This document serves that purpose.  There are no techniques in this
+proposal that are novel beyond previous art, however, this aims to be a simple
+mechanism for signing these requests.
+  </t> 
+ 
+ </section>
+ 
+  <section anchor="auth" title="Signature Authentication Scheme">
+
+  <t>
+The "signature" authentication scheme is based on the model that the client must
+authenticate itself with a digital signature produced by either a private
+asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
+is parameterized enough such that it is not bound to any particular key type or
+signing algorithm.  However, it does explicitly assume that clients can send an
+HTTP `Date` header.
+  </t>
+  
+  <section anchor="header" title="Authorization Header">
+
+   <t>
+The client is expected to send an Authorization header (as defined in RFC 2617)
+with the following parameterization:
+   </t>
+
+   <figure>
+    <artwork>
+credentials := "Signature" SP params
+params := keyId "," algorithm [", " headers] [", " ext] ", " signature
+
+keyId := "keyId" "=" plain-string
+algorithm := "algorithm" "=" DQUOTE ( rsa-sha1 / rsa-sha256 / rsa-sha512 / 
+                                      dsa-sha1 / hmac-sha1 / hmac-sha256 /
+                                      hmac-sha512 )
+                             DQUOTE
+headers := "headers" "=" plain-string
+ext := "ext" "=" plain-string 
+signature := "signature" "=" plain-string 
+
+plain-string   = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
+    </artwork>
+   </figure>
+
+   <section anchor="params" title="Signature Parameters">
+
+    <t>
+The following section details the signature parameters of the Authorization
+Header.
+    </t>
+
+    <section anchor="keyId" title="keyId">
+     <t>
+REQUIRED.  The `keyId` field is an opaque string that the server can use to look
+up the component they need to validate the signature.  It could be an SSH key
+fingerprint, an LDAP DN, etc.  Management of keys and assignment of `keyId` is
+out of scope for this document.
+     </t>
+    </section>
+    
+    <section anchor="algorithm" title="algorithm">
+
+     <t>
+REQUIRED. The `algorithm` parameter is used if the client and server agree on a
+non-standard digital signature algorithm.  The full list of supported signature
+mechanisms is listed below.
+     </t>
+    </section>
+    
+    <section anchor="headers" title="headers">
+
+     <t>
+OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
+used to sign the request.  If specified, it should be a quoted list of HTTP
+header names, separated by a single space character.  By default, only one
+HTTP header is signed, which is the `Date` header.  Note that the list MUST be
+specified in the order the values are concatenated together during signing. To
+include the HTTP request line in the signature calculation, use the special
+`request-line` value.  While this is overloading the definition of `headers` in
+HTTP linguism, the request-line is defined in RFC 2616, and as the outlier from
+headers in useful signature calculation, it is deemed simpler to simply use
+`request-line` than to add a separate parameter for it.
+     </t>
+    </section>
+
+    <section anchor="extensions" title="extensions">
+     <t>
+OPTIONAL.  The `extensions` parameter is used to include additional information
+which is covered by the request.  The content and format of the string is out of
+scope for this document, and expected to be specified by implementors.
+     </t>
+    </section>
+    
+    <section anchor="signature" title="signature">
+     <t>
+REQUIRED.  The `signature` parameter is a `Base64` encoded digital signature
+generated by the client. The client uses the `algorithm` and `headers` request
+parameters to form a canonicalized `signing string`.  This `signing string` is
+then signed with the key associated with `keyId` and the algorithm
+corresponding to `algorithm`.  The `signature` parameter is then set to the
+`Base64` encoding of the signature.
+     </t>
+    </section>
+   </section>
+   
+   <section anchor="canonicalization" title="Signature String Construction">
+   
+    <t>
+In order to generate the string that is signed with a key, the client MUST take
+the values of each HTTP header specified by `headers` in the order they appear.
+    </t>
+   
+   <list style="numbers">
+    <t>
+If the header name is not `request-line` then append the lowercased header
+name followed with an ASCII colon `:` and an ASCII space ` `.
+    </t>
+    <t>
+If the header name is `request-line` then appened the HTTP request line,
+otherwise append the header value.
+    </t>
+    <t>
+If value is not the last value then append an ASCII newline `\n`. The string
+MUST NOT include a trailing ASCII newline.
+    </t>
+   </list>
+   
+   <t>
+The rest of this section uses the following HTTP request as an example.
+    <figure>
+     <artwork>
+POST /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2011 20:51:35 GMT
+Content-Type: application/json
+Content-MD5: lCMsW4/JJy9vc6HjbraPzw==
+Content-Length: 15
+
+{"bar": "baz"}
+     </artwork>
+    </figure>
+   </t>
+   
+   <t>
+The following sections also assume that the "rsa-key-1" keyId refers to a 
+private key known to the client and a public key known to the server. 
+The "hmac-key-1" keyId refers to key known to the client and server.
+   </t>
+   
+   <section anchor="sign-string-example" title="RSA Example">
+   
+   <t>
+The authorization header and signature would be generated as:
+    <figure>
+     <artwork>
+Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",signature="Base64(RSA-SHA256(signing string))"
+     </artwork>
+    </figure>
+   </t>
+   
+   <t>
+The client would compose the signing string as:
+    <figure>
+     <artwork>
+date: Tue, 07 Jun 2011 20:51:35 GMT
+     </artwork>
+    </figure>
+   </t>
+
+   <t>
+For an RSA-based signature, the authorization header and signature would be 
+generated as:
+    <figure>
+     <artwork>
+Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",headers="request-line date content-type content-md5",signature="Base64(RSA-SHA256(signing string))"
+     </artwork>
+    </figure>
+   </t>
+
+   <t>
+The client would compose the signing string as (`+ "\n"` inserted for
+readability):
+    <figure>
+     <artwork>
+POST /foo HTTP/1.1 + "\n"
+date: Tue, 07 Jun 2011 20:51:35 GMT + "\n"
+content-type: application/json + "\n"
+content-md5: lCMsW4/JJy9vc6HjbraPzw==
+     </artwork>
+    </figure>
+   </t>
+  </section>
+  
+  <section anchor="sign-string-example" title="HMAC Example">
+
+   <t>
+For an HMAC-based signature without a list of headers specified, the 
+authorization header and signature would be generated as:
+    <figure>
+     <artwork>
+Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha1",signature="Base64(HMAC-SHA1(signing string))"
+     </artwork>
+    </figure>
+   </t>
+
+   <t>
+The client would compose the signing string as:
+    <figure>
+     <artwork>
+date: Tue, 07 Jun 2011 20:51:35 GMT
+     </artwork>
+    </figure>
+   </t>
+
+    </section>
+   </section>
+  </section>
+ </section>
+
+ <section anchor="appendix-a" title="Appendix A: Security Considerations">
+  <t>
+There are a number of security considerations to take into account when 
+deploying HTTP Signatures.
+  </t>
+  <section anchor="default-params" title="Default Parameters">
+    <t>
+Note the default parameterization of the `Signature` scheme is only safe if all
+requests are carried over a secure transport (i.e., TLS).  Sending the default
+scheme over a non-secure transport will leave the request vulnerable to
+spoofing, tampering, replay/repudiaton, and integrity violations (if using the
+STRIDE threat-modeling methodology).
+    </t>
+  </section>
+   
+  <section anchor="insecure-transports" title="Insecure Transports">
+   <t>
+If sending the request over plain HTTP, service providers SHOULD require clients
+to sign ALL HTTP headers, and the `request-line`.  Additionally, service
+providers SHOULD require `Content-MD5` calculations to be performed to ensure
+against any tampering from clients.
+   </t>
+  </section>
+   
+  <section anchor="nonces" title="Nonces">
+   <t>
+Nonces are out of scope for this document simply because many service providers
+fail to implement them correctly, or do not adopt security specfiications
+because of the infrastructure complexity.  Given the `header` parameterization,
+a service provider is fully enabled to add nonce semantics into this scheme by
+using something like an `x-request-nonce` header, and ensuring it is signed
+with the `Date` header.
+   </t>
+   
+   <note>
+    <t>
+This specification should probably explain exactly how to implement nonces for
+implementers that would like a fully vetted solution that protects against
+replay. This would be useful for implementers implementing HTTP signatures in
+a clear channel environment.
+    </t>
+    
+    <t>
+Another consideration for nonces is the probability that multiple clients may
+share the same public key. In this instance, due to clock skew issues, it is
+possible that some clients may accidentally trigger replay protection by sending
+a date in the past. The balance that this spec attempts to achieve is a simple
+per-client, time-based counter. Thus, the nonce would need to include something
+like a UUID-based client identifier, plus an incredibly accurate UTC 
+datetime-based nonce as described in RFC 3339. 
+For example: "598ef3e8-98b0-435d-8ca3-fecefdd87568 2013-05-04 20:00:35.808785840+00:00"
+    </t>
+   </note>
+  </section>
+   
+  <section anchor="clock-skew" title="Clock Skew">
+   <t>
+As the default scheme is to sign the `Date` header, service providers SHOULD
+protect against logged replay attacks by enforcing a clock skew.  The server
+SHOULD be synchronized with NTP, and the recommendation in this specification
+is to allow 300s of clock skew (in either direction).
+   </t>
+  </section>
+
+  <section anchor="required-headers" title="Required Headers to Sign">
+
+   <t>
+It is out of scope for this document to dictate what headers a service provider
+will want to enforce, but service providers SHOULD at minimum include the
+`Date` header.
+   </t>
+  </section>
+ </section>
+ 
+ <section anchor="appendix-b" title="Appendix B: Test Values">
+  <t>
+The following test data uses the following RSA 2048-bit keys, which we will 
+refer to as `keyId=Test` in the following samples:
+
+   <figure>
+    <artwork>
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCFENGw33yGihy92pDjZQhl0C3
+6rPJj+CvfSC8+q28hxA161QFNUd13wuCTUcq0Qd2qsBe/2hFyc2DCJJg0h1L78+6
+Z4UMR7EOcpfdUE9Hf3m/hs+FUR45uBJeDK1HSFHD8bHKD6kv8FPGfJTotc+2xjJw
+oYi+1hqp1fIekaxsyQIDAQAB
+-----END PUBLIC KEY-----
+    </artwork>
+   </figure>
+
+   <figure>
+    <artwork>
+-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDCFENGw33yGihy92pDjZQhl0C36rPJj+CvfSC8+q28hxA161QF
+NUd13wuCTUcq0Qd2qsBe/2hFyc2DCJJg0h1L78+6Z4UMR7EOcpfdUE9Hf3m/hs+F
+UR45uBJeDK1HSFHD8bHKD6kv8FPGfJTotc+2xjJwoYi+1hqp1fIekaxsyQIDAQAB
+AoGBAJR8ZkCUvx5kzv+utdl7T5MnordT1TvoXXJGXK7ZZ+UuvMNUCdN2QPc4sBiA
+QWvLw1cSKt5DsKZ8UETpYPy8pPYnnDEz2dDYiaew9+xEpubyeW2oH4Zx71wqBtOK
+kqwrXa/pzdpiucRRjk6vE6YY7EBBs/g7uanVpGibOVAEsqH1AkEA7DkjVH28WDUg
+f1nqvfn2Kj6CT7nIcE3jGJsZZ7zlZmBmHFDONMLUrXR/Zm3pR5m0tCmBqa5RK95u
+412jt1dPIwJBANJT3v8pnkth48bQo/fKel6uEYyboRtA5/uHuHkZ6FQF7OUkGogc
+mSJluOdc5t6hI1VsLn0QZEjQZMEOWr+wKSMCQQCC4kXJEsHAve77oP6HtG/IiEn7
+kpyUXRNvFsDE0czpJJBvL/aRFUJxuRK91jhjC68sA7NsKMGg5OXb5I5Jj36xAkEA
+gIT7aFOYBFwGgQAQkWNKLvySgKbAZRTeLBacpHMuQdl1DfdntvAyqpAZ0lY0RKmW
+G6aFKaqQfOXKCyWoUiVknQJAXrlgySFci/2ueKlIE1QqIiLSZ8V8OlpFLRnb1pzI
+7U1yQXnTAEFYM560yJlzUpOb1V4cScGd365tiSMvxLOvTA==
+-----END RSA PRIVATE KEY-----
+    </artwork>
+   </figure>
+  </t>
+
+  <t>
+And all examples use this request:
+   <figure>
+    <artwork>
+POST /foo?param=value&amp;pet=dog HTTP/1.1
+Host: example.com
+Date: Thu, 05 Jan 2012 21:31:40 GMT
+Content-Type: application/json
+Content-MD5: Sd/dVLAcvNLSq16eXua5uQ==
+Content-Length: 18
+
+{"hello": "world"}
+    </artwork>
+   </figure>
+  </t>
+  
+  <section anchor="default-test" title="Default Test">
+   <t>
+The string to sign would be:
+    <figure>
+     <artwork>
+date: Thu, 05 Jan 2012 21:31:40 GMT
+    </artwork>
+   </figure>
+   </t>
+   
+   <t>
+The Authorization header would be:
+    <figure>
+     <artwork>
+Authorization: Signature keyId="Test",algorithm="rsa-sha256",signature="JldXnt8W9t643M2Sce10gqCh/+E7QIYLiI+bSjnFBGCti7s+mPPvOjVb72sbd1FjeOUwPTDpKbrQQORrm+xBYfAwCxF3LBSSzORvyJ5nRFCFxfJ3nlQD6Kdxhw8wrVZX5nSem4A/W3C8qH5uhFTRwF4ruRjh+ENHWuovPgO/HGQ="
+    </artwork>
+   </figure>
+   </t>
+  </section>
+  
+  <section anchor="all-headers-test" title="All Headers Test">
+   <t>
+Parameterized to include all headers, the string to sign would be (`+ "\n"`
+inserted for readability):
+    <figure>
+     <artwork>
+POST /foo?param=value&amp;pet=dog HTTP/1.1 + "\n"
+host: example.com + "\n"
+date: Thu, 05 Jan 2012 21:31:40 GMT + "\n"
+content-type: application/json + "\n"
+content-md5: Sd/dVLAcvNLSq16eXua5uQ== + "\n"
+content-length: 18
+     </artwork>
+    </figure>
+   </t>
+   
+   <t>
+The Authorization header would be:
+    <figure>
+     <artwork>
+Authorization: Signature keyId="Test",algorithm="rsa-sha256",headers="request-line host date content-type content-md5 content-length",signature="Gm7W/r+e90REDpWytALMrft4MqZxCmslOTOvwJX17ViEBA5E65QqvWI0vIH3l/vSsGiaMVmuUgzYsJLYMLcm5dGrv1+a+0fCoUdVKPZWHyImQEqpLkopVwqEH67LVECFBqFTAKlQgBn676zrfXQbb+b/VebAsNUtvQMe6cTjnDY="
+     </artwork>
+    </figure>
+   </t>
+ </section>
+ </section>
+</middle>
+<back>
+ <references title="Normative References">
+  &rfc2119;
+  &rfc2616;
+  &rfc2617;
+  &rfc3339;
+  &rfc5246;
+ </references>
+</back>
+</rfc>
