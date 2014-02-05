@@ -6,6 +6,7 @@
   <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3230.xml">
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+  <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-25.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
 <?rfc compact="yes" ?>
@@ -14,7 +15,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-01">
+     docName="draft-cavage-http-signatures-02">
 <front>
  <title>HTTP Signatures</title>
 
@@ -214,7 +215,9 @@ include the request line, Host, and Date header fields.
 To include the HTTP request line in the signature calculation, use the 
 special `(request-line)` value.  While this is overloading the definition 
 of `headers` in HTTP linguism, the request-line is defined in 
-<xref target="RFC2616">RFC 2616</xref>, and as the outlier from
+<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, 
+<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging#section-3.1.1">
+Section 3.1.1</eref>, and as the outlier from
 headers in useful signature calculation, it is deemed simpler to use
 `(request-line)` than to add a separate parameter for it.
 
@@ -348,6 +351,7 @@ content-length: 18
   &rfc2616;
   &rfc2617;
   &rfc4648;
+  &httpbis-p1;
  </references>
  <references title="Informative References">
   &rfc3230;
