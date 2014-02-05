@@ -91,10 +91,10 @@ keys).
 
   <t>
 Several web service providers have invented their own schemes for signing
-HTTP requests, but to date, none have been placed in the public domain as a
-standard.  This document serves that purpose.  There are no techniques in this
-proposal that are novel beyond previous art, however, this aims to be a simple
-mechanism for signing these requests.
+HTTP requests, but to date, none have been standardized.  This document serves 
+that purpose.  There are no techniques in this proposal that are novel beyond 
+previous art, however, this aims to be a simple mechanism for signing these 
+requests.
   </t> 
  
  </section>
