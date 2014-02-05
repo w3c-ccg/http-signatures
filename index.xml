@@ -5,6 +5,7 @@
   <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3230.xml">
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+  <!ENTITY rfc6749 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-25.xml">
   <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-25.xml">
 ]>
@@ -81,9 +82,9 @@ related to this specification should be sent to
  <section anchor="intro" title="Introduction">
   <t>
 This protocol is intended to provide a standard way for clients to sign HTTP
-requests.  <xref target="RFC2617">RFC 2617</xref> (HTTP Authentication) 
+requests.  <xref target="RFC2617">HTTP Authentication</xref> 
 defines Basic and Digest authentication mechanisms, and 
-<xref target="RFC5246">RFC 5246</xref> (TLS 1.2) 
+<xref target="RFC5246">TLS 1.2</xref>
 defines client-auth, both of which are widely
 employed on the Internet today.  However, it is common place that the burdens of
 PKI prevent web service operators from deploying that methodoloy, and so many
@@ -91,11 +92,11 @@ fall back to Basic authentication, which has poor security characteristics.
   </t>
 
   <t>
-Additionally, OAuth provides a fully-specified alternative for authorization
-of web service requests, but is not (always) ideal for machine to machine
-communication, as the key acquisition steps (generally) imply a fixed
-infrastructure that may not make sense to a service provider (e.g., symmetric
-keys).
+Additionally, <xref target="RFC6749">OAuth 2.0</xref> provides a 
+fully-specified alternative for authorization of web service requests, but is 
+not (always) ideal for machine to machine communication, as the key acquisition 
+steps (generally) imply a fixed infrastructure that may not make sense to a 
+service provider (e.g., symmetric keys).
   </t>
 
   <t>
@@ -360,6 +361,7 @@ content-length: 18
  <references title="Informative References">
   &rfc3230;
   &rfc5246;
+  &rfc6749;
  </references>
 
  <section anchor="appendix-a" title="Security Considerations">
