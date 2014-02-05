@@ -131,19 +131,20 @@ Section 4.1</eref>) with the following parameterization:
 
    <figure>
     <artwork>
-credentials := "Signature" SP params
-params := keyId "," algorithm [", " headers] [", " ext] ", " signature
-
-keyId := "keyId" "=" plain-string
-algorithm := "algorithm" "=" DQUOTE ( rsa-sha1 / rsa-sha256 / rsa-sha512 / 
-                                      dsa-sha1 / hmac-sha1 / hmac-sha256 /
-                                      hmac-sha512 )
-                             DQUOTE
-headers := "headers" "=" plain-string
-signature := "signature" "=" plain-string 
-
-plain-string   = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
+credentials   = "Signature" SP params
+params        = key-id CSEP algorithm [CSEP headers] CSEP signature
+key-id        = "keyId" "=" quoted-string
+algorithm     = "algorithm" "=" DQUOTE ( "rsa-sha1" / "rsa-sha256" / 
+                                         "rsa-sha512" / "dsa-sha1" / 
+                                         "hmac-sha1" / "hmac-sha256" /
+                                         "hmac-sha512" )
+                                DQUOTE
+headers       = "headers" "=" quoted-string
+signature     = "signature" "=" quoted-string 
+quoted-string = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
+CSEP          = *SP "," *SP
     </artwork>
+
    </figure>
 
    <section anchor="params" title="Signature Parameters">
