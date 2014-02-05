@@ -7,6 +7,7 @@
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-25.xml">
+  <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-25.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
 <?rfc compact="yes" ?>
@@ -122,8 +123,11 @@ HTTP `Date` header.
   <section anchor="header" title="Authorization Header">
 
    <t>
-The client is expected to send an Authorization header (as defined in RFC 2617)
-with the following parameterization:
+The client is expected to send an Authorization header 
+(as defined in 
+<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
+target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
+Section 4.1</eref>) with the following parameterization:
    </t>
 
    <figure>
@@ -352,6 +356,7 @@ content-length: 18
   &rfc2617;
   &rfc4648;
   &httpbis-p1;
+  &httpbis-p7;
  </references>
  <references title="Informative References">
   &rfc3230;
