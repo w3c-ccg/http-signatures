@@ -3,6 +3,7 @@
   <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
   <!ENTITY rfc2616 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml">
   <!ENTITY rfc2617 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml">
+  <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3230.xml">
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
 ]>
@@ -213,7 +214,7 @@ will appear in the transmitted HTTP message.
      <t>
 If the header field is `(request-line)` then appened the HTTP request line,
 otherwise append the header value. 
-     </t>
+     </t> 
      <t>
 If value is not the last value then append an ASCII newline `\n`. The string
 MUST NOT include a trailing ASCII newline.
@@ -222,6 +223,7 @@ MUST NOT include a trailing ASCII newline.
    </t>   
    <t>
 The rest of this section uses the following HTTP request as an example.
+
     <figure>
      <artwork>
 POST /foo HTTP/1.1
@@ -237,6 +239,11 @@ Content-Length: 18
    </t>
    
    <t>
+Note that the use of the `Digest` header field is per 
+<xref target="RFC3230">RFC 3230</xref>, <eref 
+target="http://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
+and is included merely as a demonstration of how an implementer could include 
+information about the body of the message in the signature.
 The following sections also assume that the "rsa-key-1" keyId refers to a 
 private key known to the client and a public key known to the server. 
 The "hmac-key-1" keyId refers to key known to the client and server.
@@ -327,6 +334,7 @@ content-length: 18
   &rfc4648;
  </references>
  <references title="Informative References">
+  &rfc3230;
   &rfc5246;
  </references>
 
