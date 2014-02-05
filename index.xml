@@ -163,16 +163,11 @@ mechanisms is listed below.
 
      <t>
 OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
-used to sign the request.  If specified, it should be a quoted list of HTTP
-header names, separated by a single space character.  By default, only one
-HTTP header is signed, which is the `Date` header.  Note that the list MUST be
-specified in the order the values are concatenated together during signing. To
-include the HTTP request line in the signature calculation, use the special
-`request-line` value.  While this is overloading the definition of `headers` in
-HTTP linguism, the request-line is defined in 
-<xref target="RFC2616">RFC 2616</xref>, and as the outlier from
-headers in useful signature calculation, it is deemed simpler to use
-`request-line` than to add a separate parameter for it.
+used to sign the request.  If specified, it should be a lowercased,
+quoted list of HTTP header names, separated by a single space character.  
+By default, only one HTTP header is signed, which is the `Date` header.  
+Note that the list order is important, and MUST be specified in the order 
+the values are concatenated together during signing. 
      </t>
     </section>
 
@@ -204,15 +199,23 @@ the values of each HTTP header specified by `headers` in the order they appear.
 It is out of scope for this document to dictate what headers a service provider
 will want to enforce, but service providers SHOULD at minimum include the
 request line, Host, and Date headers.
+   </t>
+   <t>
+To include the HTTP request line in the signature calculation, use the 
+special `(request-line)` value.  While this is overloading the definition 
+of `headers` in HTTP linguism, the request-line is defined in 
+<xref target="RFC2616">RFC 2616</xref>, and as the outlier from
+headers in useful signature calculation, it is deemed simpler to use
+`(request-line)` than to add a separate parameter for it.
 
     <list style="numbers">
      <t>
-If the header name is not `request-line` then append the lowercased header
+If the header name is not `(request-line)` then append the lowercased header
 name followed with an ASCII colon `:` and an ASCII space ` `.
      </t>
      <t>
-If the header name is `request-line` then appened the HTTP request line,
-otherwise append the header value.
+If the header name is `(request-line)` then appened the HTTP request line,
+otherwise append the header value. 
      </t>
      <t>
 If value is not the last value then append an ASCII newline `\n`. The string
@@ -249,7 +252,7 @@ The authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="request-line host date digest content-length",
+headers="(request-line) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"
      </artwork>
     </figure>
@@ -277,7 +280,7 @@ be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="request-line host date digest content-length",
+headers="(request-line) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"
      </artwork>
     </figure>
@@ -292,7 +295,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha1",
-headers="request-line host date digest content-length",
+headers="(request-line) host date digest content-length",
 signature="Base64(HMAC-SHA1(signing string))"
      </artwork>
     </figure>
@@ -440,7 +443,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-headers="request-line host date", signature="KcLSABBj/m3v2Dhxi
+headers="(request-line) host date", signature="KcLSABBj/m3v2Dhxi
 CKJmzYJvnx74tDO1SaURD8Dr8XpugN5wpy8iBVJtpkHUIp4qBYpzx2QvD16t8X
 0BUMiKc53Age+baQFWwb2iYYJzvuUL+krrl/Q7H6fPBADBsHqEZ7IE8rR0Ys3l
 b7J5A6VB9J/4yVTRiBcxTypW/mpr5w="
@@ -470,7 +473,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-headers="request-line host date content-type digest content-length",
+headers="(request-line) host date content-type digest content-length",
 signature="jgSqYK0yKclIHfF9zdApVEbDp5eqj8C4i4X76pE+XHoxugXv7q
 nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
 Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="
