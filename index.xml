@@ -317,8 +317,9 @@ content-length: 18
    </section>
   </section>
  </section>
-
- <section anchor="appendix-a" title="Appendix A: Security Considerations">
+</middle>
+<back>
+ <section anchor="appendix-a" title="Security Considerations">
   <t>
 There are a number of security considerations to take into account when implementing
 or utilizing this specification. A thorough security analysis of this protocol,
@@ -327,7 +328,7 @@ including its strengths and weaknesses, can be found in
   </t>
  </section>
 
- <section anchor="appendix-b" title="Appendix B: Extensions">
+ <section anchor="appendix-b" title="Extensions">
   <t>
 This specification was designed to be simple, modular, and extensible. There
 are a number of other specifications that build on this one. For
@@ -344,7 +345,7 @@ extension.
   </t>
  </section>
 
- <section anchor="appendix-c" title="Appendix C: Test Values">
+ <section anchor="appendix-c" title="Test Values">
   <t>
 The following test data uses the following RSA 2048-bit keys, which we will 
 refer to as `keyId=Test` in the following samples:
@@ -478,8 +479,21 @@ Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="
    </t>
  </section>
  </section>
-</middle>
-<back>
+ <section anchor="appendix-d" title="IANA Considerations">
+  <section anchor="iana-scheme" title="Signature Authentication Scheme">
+   <t>
+Authentication Scheme Name: Signature
+   </t>
+   <t>
+Pointer to specification text: [RFC_THIS_DOCUMENT], Section 2.
+   </t>
+   <t>
+Notes (optional): The Signature scheme is designed for clients to 
+authenticate themselves with an origin. 
+   </t>
+  </section>
+ </section>
+
  <references title="Normative References">
   &rfc2119;
   &rfc2616;
