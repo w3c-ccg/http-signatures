@@ -99,7 +99,7 @@ mechanism for signing these requests.
  
  </section>
  
-  <section anchor="auth" title="Signature Authentication Scheme">
+ <section anchor="auth" title="Signature Authentication Scheme">
 
   <t>
 The "signature" authentication scheme is based on the model that the client must
@@ -128,7 +128,6 @@ algorithm := "algorithm" "=" DQUOTE ( rsa-sha1 / rsa-sha256 / rsa-sha512 /
                                       hmac-sha512 )
                              DQUOTE
 headers := "headers" "=" plain-string
-ext := "ext" "=" plain-string 
 signature := "signature" "=" plain-string 
 
 plain-string   = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
@@ -183,7 +182,15 @@ key associated with `keyId` and the algorithm corresponding to `algorithm`.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
+   </section>
 
+   <section anchor="ambiguity" title="Ambiguous Parameters">
+    <t>
+If any of the Signature scheme parameter names are erroneously duplicated in the 
+Authorization header field, then the last parameter defined MUST be used. Any
+parameter that is not recognized as a Signature scheme parameter, or is
+not well-formed, MUST be ignored.
+    </t>
    </section>
    
    <section anchor="canonicalization" title="Signature String Construction">
