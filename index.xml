@@ -57,14 +57,22 @@
  <keyword>digital signature</keyword>
  <keyword>PKI</keyword>
  <abstract>
- <t>
+  <t>
 When communicating over the Internet using the HTTP protocol, it is often
 desirable to be able to securely verify the sender of a message as well as
 ensure that the message was not tampered with during transit. This document 
 describes a way to add origin authentication and message integrity to HTTP 
 messages.
- </t>
+  </t>
  </abstract>
+ <note title="Feedback">
+  <t>
+This specification is a part of the 
+<eref target="https://web-payments.org/">Web Payments</eref> work. Feedback 
+related to this specification should be sent to
+<eref target="mailto:public-webpayments@w3.org">public-webpayments@w3.org</eref>.
+  </t>
+ </note>
 </front>
 
 <middle>
