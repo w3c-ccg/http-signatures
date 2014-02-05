@@ -183,6 +183,7 @@ key associated with `keyId` and the algorithm corresponding to `algorithm`.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
+
    </section>
    
    <section anchor="canonicalization" title="Signature String Construction">
@@ -517,6 +518,14 @@ Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="
     </figure>
    </t>
  </section>
+ </section>
+ <section anchor="acknowledgements" title="Acknowledgements">
+  <t>
+The editor would like to thank the following individuals for feedback on and
+implementations of the specification (in alphabetical order): Stephen Farrell, 
+Phillip Hallam-Baker, Dave Lehn, Dave Longley, James H. Manger, 
+Mark Nottingham, Yoav Nir, Julian Reschke, and Michael Richardson.
+  </t>
  </section>
  <section anchor="appendix-d" title="IANA Considerations">
   <section anchor="iana-scheme" title="Signature Authentication Scheme">
