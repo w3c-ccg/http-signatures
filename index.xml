@@ -82,21 +82,22 @@ related to this specification should be sent to
 
  <section anchor="intro" title="Introduction">
   <t>
-This protocol is intended to provide a standard way for clients to sign HTTP
-requests.  <xref target="RFC2617">HTTP Authentication</xref> 
+This protocol extension is intended to provide a standard way for clients to 
+sign HTTP requests.  <xref target="RFC2617">HTTP Authentication</xref> 
 defines Basic and Digest authentication mechanisms, and 
 <xref target="RFC5246">TLS 1.2</xref>
 defines client-auth, both of which are widely
-employed on the Internet today.  However, it is common place that the burdens of
-PKI prevent web service operators from deploying that methodoloy, and so many
-fall back to Basic authentication, which has poor security characteristics.
+employed on the Internet today.  The burdens of PKI prevent some
+web service operators from deploying that methodoloy, and so some of those
+organizations fall back to Basic or Digest authentication, which has poor 
+security characteristics.
   </t>
 
   <t>
 Additionally, <xref target="RFC6749">OAuth 2.0</xref> provides a 
 fully-specified alternative for authorization of web service requests, but is 
-not (always) ideal for machine to machine communication, as the key acquisition 
-steps (generally) imply a fixed infrastructure that may not make sense to a 
+not always ideal for machine to machine communication, as the key acquisition 
+steps generally imply a fixed infrastructure that may not make sense to a 
 service provider (e.g., symmetric keys).
   </t>
 
