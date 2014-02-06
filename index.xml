@@ -60,11 +60,12 @@
  <keyword>PKI</keyword>
  <abstract>
   <t>
-When communicating over the Internet using the HTTP protocol, it is often
-desirable to be able to securely verify the sender of a message as well as
-ensure that the message was not tampered with during transit. This document 
-describes a way to add origin authentication and message integrity to HTTP 
-messages.
+When communicating over the Internet using the HTTP protocol, it can be
+desirable for a server to authenticate the client that sent a message.
+It can also be desirable to ensure that the message was not tampered with 
+during transit. This document describes a way for clients to
+simultaneously add authentication and message integrity to HTTP messages by
+using a digital signature.
   </t>
  </abstract>
  <note title="Feedback">
@@ -562,7 +563,7 @@ Pointer to specification text: [RFC_THIS_DOCUMENT], Section 2.
    </t>
    <t>
 Notes (optional): The Signature scheme is designed for clients to 
-authenticate themselves with an origin. 
+authenticate themselves with a server. 
    </t>
   </section>
  </section>
