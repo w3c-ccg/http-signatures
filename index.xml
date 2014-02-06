@@ -18,7 +18,7 @@
 <rfc category="std" ipr="trust200902" submissionType="independent" 
      docName="draft-cavage-http-signatures-02">
 <front>
- <title>HTTP Signatures</title>
+ <title>The 'Signature' HTTP Authentication Scheme</title>
 
  <author initials="M.C." surname="Cavage" fullname="Mark Cavage">
   <organization>Joyent</organization>
