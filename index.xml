@@ -196,9 +196,11 @@ out of scope for this document.
     <section anchor="algorithm" title="algorithm">
 
      <t>
-REQUIRED. The `algorithm` parameter is used if the client and server agree on a
-non-standard digital signature algorithm.  The full list of supported signature
-mechanisms is listed below.
+REQUIRED. The `algorithm` parameter is used to specify the digital signature
+algorithm to use when generating the signature. Valid values for this
+parameter can be found in the Signature Algorithms registry located at 
+<eref target="http://www.iana.org/assignments/signature-algorithms">
+http://www.iana.org/assignments/signature-algorithms</eref>.
      </t>
     </section>
     
