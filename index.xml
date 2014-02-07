@@ -241,38 +241,31 @@ not well-formed, MUST be ignored.
    <section anchor="canonicalization" title="Signature String Construction">
    
    <t>
-In order to generate the string that is signed with a key, the client MUST take
+In order to generate the string that is signed with a key, the client MUST use
 the values of each HTTP header field specified by `headers` in the order they 
 appear. It is out of scope for this document to dictate what header fields 
 an application will want to enforce, but implementers SHOULD at minimum 
-include the request line, Host, and Date header fields.
+include the method + URL (request-line), Host, and Date header fields.
    </t>
    <t>
 To include the HTTP request line in the signature calculation, use the 
-special `(request-line)` value.  While this is overloading the definition 
-of `headers` in HTTP linguism, the request-line is defined in 
-<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, 
-<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging#section-3.1.1">
-Section 3.1.1</eref>, and as the outlier from
-headers in useful signature calculation, it is deemed simpler to use
-`(request-line)` than to add a separate parameter for it.
-
+special `(request-line)` header field name.
     <list style="numbers">
      <t>
-If the header field is not `(request-line)` then append the lowercased header
-name followed with an ASCII colon `:`, an ASCII space ` `, and the value.
-The value MUST NOT be modified or canonicalized in any way. If there are 
-multiple instances of the same header field, all header field values associated 
-with the header field MUST be concatenated and used in the order in which they 
-will appear in the transmitted HTTP message.
+If the header field name is `(request-line)` then generate the header field 
+value by concatenating the lowercased method name, an ASCII space, and the 
+method URL.
      </t>
      <t>
-If the header field is `(request-line)` then appened the HTTP request line,
-otherwise append the header value. 
-     </t> 
+Create the header field string by concatenating the lowercased header field 
+name followed with an ASCII colon `:`, an ASCII space ` `, and the header 
+field value. The value MUST NOT be modified or canonicalized in any way. If 
+there are multiple instances of the same header field, all header field values 
+associated with the header field MUST be concatenated and used in the order in 
+which they will appear in the transmitted HTTP message.
+     </t>
      <t>
-If value is not the last value then append an ASCII newline `\n`. The string
-MUST NOT include a trailing ASCII newline.
+If value is not the last value then append an ASCII newline `\n`.
      </t>
     </list>
    </t>   
@@ -321,7 +314,7 @@ signature="Base64(RSA-SHA256(signing string))"
 The client would compose the signing string as:
     <figure>
      <artwork>
-POST /foo HTTP/1.1\n
+(request-line): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -353,9 +346,9 @@ For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
-Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha1",
+Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha256",
 headers="(request-line) host date digest content-length",
-signature="Base64(HMAC-SHA1(signing string))"
+signature="Base64(HMAC-SHA256(signing string))"
      </artwork>
     </figure>
    </t>
@@ -366,7 +359,7 @@ signature algorithm that is used. The client would compose the signing string
 in the same way as the RSA Example above:
     <figure>
      <artwork>
-POST /foo HTTP/1.1\n
+(request-line): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -522,11 +515,11 @@ xpUmimN4c3TMN7OFH//+r8hBf7BT9/GmHDUVZT2JzWGLZES2xDOUuMtA="
 
   <section anchor="basic-test" title="Basic Test">
    <t>
-The minimum recommended data to sign is the request-line, host, and date. In
+The minimum recommended data to sign is the (request-line), host, and date. In
 this case, the string to sign would be:
     <figure>
      <artwork>
-POST /foo?param=value&amp;pet=dog HTTP/1.1
+(request-line): post /foo?param=value&amp;pet=dog
 host: example.com
 date: Thu, 05 Jan 2014 21:31:40 GMT
     </artwork>
@@ -553,7 +546,7 @@ A strong signature including all of the headers and a digest of the body of
 the HTTP request would result in the following signing string:
     <figure>
      <artwork>
-POST /foo?param=value&amp;pet=dog HTTP/1.1
+(request-line): post /foo?param=value&amp;pet=dog
 host: example.com
 date: Thu, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
