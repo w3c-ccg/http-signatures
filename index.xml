@@ -153,28 +153,8 @@ The client is expected to send an Authorization header
 (as defined in 
 <xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
 target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
-Section 4.1</eref>) with the following parameterization:
-   </t>
-
-   <figure>
-    <artwork>
-credentials   = "Signature" SP params
-params        = key-id CSEP algorithm [CSEP headers] CSEP signature
-key-id        = "keyId" "=" quoted-string
-algorithm     = "algorithm" "=" DQUOTE signature-algorithm DQUOTE
-headers       = "headers" "=" quoted-string
-signature     = "signature" "=" quoted-string 
-quoted-string = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
-CSEP          = *SP "," *SP
-    </artwork>
-   </figure>
-
-   <t>
-The "signature-algorithm" rule above MUST match any signature 
-algorithm name not marked as "deprecated" in the Signature Algorithms 
-registry located at 
-<eref target="http://www.iana.org/assignments/signature-algorithms">
-http://www.iana.org/assignments/signature-algorithms</eref>.
+Section 4.1</eref>) where the "auth-scheme" is "Signature" and the 
+"auth-param" parameters meet the requirements listed below:
    </t>
 
    <section anchor="params" title="Signature Parameters">
@@ -200,7 +180,8 @@ REQUIRED. The `algorithm` parameter is used to specify the digital signature
 algorithm to use when generating the signature. Valid values for this
 parameter can be found in the Signature Algorithms registry located at 
 <eref target="http://www.iana.org/assignments/signature-algorithms">
-http://www.iana.org/assignments/signature-algorithms</eref>.
+http://www.iana.org/assignments/signature-algorithms</eref> and MUST NOT be
+marked "deprecated".
      </t>
     </section>
     
