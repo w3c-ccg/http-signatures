@@ -88,8 +88,8 @@ This protocol extension is intended to provide a standard way for clients to
 sign HTTP messages.  <xref target="RFC2617">HTTP Authentication</xref> 
 defines Basic and Digest authentication mechanisms, and 
 <xref target="RFC5246">TLS 1.2</xref>
-defines client-auth, both of which are widely
-employed on the Internet today.  The burdens of PKI prevent some
+defines cryptographically stronger client authentication, all of which are 
+widely employed on the Internet today.  The burdens of PKI prevent some
 web service operators from deploying that methodoloy, and so some of those
 organizations fall back to Basic or Digest authentication. Basic and
 Digest authentication provide poor security characteristics when combined 
@@ -117,7 +117,7 @@ data.
   <t>
 Additionally, <xref target="RFC6749">OAuth 2.0</xref> provides a 
 fully-specified alternative for authorization of web service requests, but is 
-not always ideal for machine to machine communication, as the key acquisition 
+not always ideal for machine to machine communication, as the token acquisition 
 steps generally imply a fixed infrastructure that may not make sense to a 
 service provider. For example, the use of symmetric keys and the distribution
 of hundreds of thousands of those keys across multiple datacenters around the
@@ -128,10 +128,10 @@ provider and their customers.
 
   <t>
 Several web service providers have invented their own schemes for signing
-HTTP requests, but to date, none have been standardized.  This document serves 
-that purpose.  There are no techniques in this proposal that are novel beyond 
-previous art, however, this aims to be a simple mechanism for signing these 
-messages.
+HTTP messages, but to date, none have been standardized. While there
+are no techniques in this proposal that are novel beyond the previous art, it
+is useful to standardize a simple and cryptographically strong mechanism for 
+digitally signing HTTP messages.
   </t> 
  
  </section>
