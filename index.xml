@@ -5,9 +5,11 @@
   <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3230.xml">
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+  <!ENTITY rfc6376 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6376.xml">
   <!ENTITY rfc6749 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-25.xml">
   <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-25.xml">
+  <!ENTITY jwa SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
 <?rfc compact="yes" ?>
@@ -159,18 +161,21 @@ Section 4.1</eref>) with the following parameterization:
 credentials   = "Signature" SP params
 params        = key-id CSEP algorithm [CSEP headers] CSEP signature
 key-id        = "keyId" "=" quoted-string
-algorithm     = "algorithm" "=" DQUOTE ( "rsa-sha1" / "rsa-sha256" / 
-                                         "rsa-sha512" / "dsa-sha1" / 
-                                         "hmac-sha1" / "hmac-sha256" /
-                                         "hmac-sha512" )
-                                DQUOTE
+algorithm     = "algorithm" "=" DQUOTE signature-algorithm DQUOTE
 headers       = "headers" "=" quoted-string
 signature     = "signature" "=" quoted-string 
 quoted-string = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
 CSEP          = *SP "," *SP
     </artwork>
-
    </figure>
+
+   <t>
+The "signature-algorithm" rule above MUST match any signature 
+algorithm name not marked as "deprecated" in the Signature Algorithms 
+registry located at 
+<eref target="http://www.iana.org/assignments/signature-algorithms">
+http://www.iana.org/assignments/signature-algorithms</eref>.
+   </t>
 
    <section anchor="params" title="Signature Parameters">
 
@@ -377,12 +382,14 @@ content-length: 18
 <back>
  <references title="Normative References">
   &rfc2119;
-  &rfc2617;
   &rfc4648;
+  &rfc6376;
   &httpbis-p1;
   &httpbis-p7;
+  &jwa;
  </references>
  <references title="Informative References">
+  &rfc2617;
   &rfc3230;
   &rfc5246;
   &rfc6749;
@@ -579,16 +586,56 @@ Mark Nottingham, Yoav Nir, Julian Reschke, and Michael Richardson.
  <section anchor="appendix-d" title="IANA Considerations">
   <section anchor="iana-scheme" title="Signature Authentication Scheme">
    <t>
-Authentication Scheme Name: Signature
+The following entry should be added to the Authentication Scheme Registry
+located at <eref target="http://www.iana.org/assignments/http-authschemes">
+http://www.iana.org/assignments/http-authschemes</eref>
    </t>
    <t>
-Pointer to specification text: [RFC_THIS_DOCUMENT], Section 2.
-   </t>
-   <t>
+Authentication Scheme Name: Signature<vspace/>
+Reference: [RFC_THIS_DOCUMENT], Section 2.<vspace/>
 Notes (optional): The Signature scheme is designed for clients to 
 authenticate themselves with a server. 
    </t>
   </section>
+  <section anchor="sa-registry" title="Signature Algorithm Registry">
+   <t>
+The following initial entries should be added to the Signature Algorithm 
+Registry to be created and maintained at (the suggested URI) 
+<eref target="http://www.iana.org/assignments/signature-algorithms">
+http://www.iana.org/assignments/signature-algorithms</eref>:
+   </t>
+   <t>
+Editor's note: The references in this section are problematic as many of the 
+specifications that they refer to are too implementation specific, rather 
+than just pointing to the proper signature and hashing specifications. A
+better approach might be just specifying the signature and hashing function
+specifications, leaving implementers to connect the dots (which are not that
+hard to connect).
+   </t>
+   <t>
+Algorithm Name: rsa-sha1<vspace/>
+Reference: <xref target="RFC6376">RFC 6376</xref>, Section 3.3.1<vspace/>
+Status: deprecated
+   </t>
+   <t>
+Algorithm Name: rsa-sha256<vspace/>
+Reference: <xref target="RFC6376">RFC 6376</xref>, Section 3.3.2<vspace/>
+Status: active
+   </t>
+   <t>
+Algorithm Name: hmac-sha256<vspace/>
+Reference: HS256 in <xref target="I-D.ietf-jose-json-web-algorithms">
+JOSE JSON Web Algorithms</xref>, Section 3.2<vspace/>
+Status: active
+   </t>
+   <t>
+Algorithm Name: ecdsa-sha256<vspace/>
+Reference: ES256 in <xref target="I-D.ietf-jose-json-web-algorithms">
+JOSE JSON Web Algorithms</xref>, Section 3.4<vspace/>
+Status: active
+   </t>
+  </section>
+
  </section>
 </back>
 </rfc>
