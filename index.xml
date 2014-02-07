@@ -83,14 +83,32 @@ related to this specification should be sent to
  <section anchor="intro" title="Introduction">
   <t>
 This protocol extension is intended to provide a standard way for clients to 
-sign HTTP requests.  <xref target="RFC2617">HTTP Authentication</xref> 
+sign HTTP messages.  <xref target="RFC2617">HTTP Authentication</xref> 
 defines Basic and Digest authentication mechanisms, and 
 <xref target="RFC5246">TLS 1.2</xref>
 defines client-auth, both of which are widely
 employed on the Internet today.  The burdens of PKI prevent some
 web service operators from deploying that methodoloy, and so some of those
-organizations fall back to Basic or Digest authentication, which has poor 
-security characteristics.
+organizations fall back to Basic or Digest authentication. Basic and
+Digest authentication provide poor security characteristics when combined 
+with common password usage behavior. 
+  </t>
+
+  <t>
+Password database compromises between 2010 to 2014 have shown that people 
+regularly use weak passwords and share the same
+password across multiple websites. The use of Basic authentication over a
+regular HTTP channel provides no protection. Digest authentication, while 
+providing some level of protection, still leaves the scheme open to 
+brute-force attacks that are capable of discovering a weak or random 8 character 
+password in less than 3 hours using a single commodity computer and mere 
+minutes using cloud-based rental servers to distribute the brute-force attack.
+  </t>
+
+  <t>
+While it is true that most Basic and Digest authentication approaches are 
+operated over secure channels like TLS, revelations over pervasive monitoring 
+in 2012 have shown that TLS may not be secure enough to protect sensitive data.
   </t>
 
   <t>
@@ -98,7 +116,11 @@ Additionally, <xref target="RFC6749">OAuth 2.0</xref> provides a
 fully-specified alternative for authorization of web service requests, but is 
 not always ideal for machine to machine communication, as the key acquisition 
 steps generally imply a fixed infrastructure that may not make sense to a 
-service provider (e.g., symmetric keys).
+service provider. For example, the use of symmetric keys and the distribution
+of hundreds of thousands of those keys across multiple datacenters around the
+world create multiple points of attack where a successful attack results in
+a large gain for the attacker and thus an even bigger problem for the service 
+provider and their customers.
   </t>
 
   <t>
@@ -106,7 +128,7 @@ Several web service providers have invented their own schemes for signing
 HTTP requests, but to date, none have been standardized.  This document serves 
 that purpose.  There are no techniques in this proposal that are novel beyond 
 previous art, however, this aims to be a simple mechanism for signing these 
-requests.
+messages.
   </t> 
  
  </section>
