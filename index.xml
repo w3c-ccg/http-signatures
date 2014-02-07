@@ -110,7 +110,8 @@ minutes using cloud-based rental servers to distribute the brute-force attack.
   <t>
 While it is true that most Basic and Digest authentication approaches are 
 operated over secure channels like TLS, revelations over pervasive monitoring 
-in 2012 have shown that TLS may not be secure enough to protect sensitive data.
+in 2012 have shown that TLS alone may not be secure enough to protect sensitive 
+data.
   </t>
 
   <t>
