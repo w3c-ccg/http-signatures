@@ -20,7 +20,7 @@
 <rfc category="std" ipr="trust200902" submissionType="independent" 
      docName="draft-cavage-http-signatures-02">
 <front>
- <title>The 'Signature' HTTP Authentication Scheme</title>
+ <title>Signing HTTP Messages</title>
 
  <author initials="M.C." surname="Cavage" fullname="Mark Cavage">
   <organization>Joyent</organization>
@@ -54,7 +54,7 @@
   </address>
  </author>
 
- <date month="February" year="2014" />
+ <date month="April" year="2014" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -63,11 +63,11 @@
  <abstract>
   <t>
 When communicating over the Internet using the HTTP protocol, it can be
-desirable for a server to authenticate the client that sent a message.
-It can also be desirable to ensure that the message was not tampered with 
-during transit. This document describes a way for clients to
-simultaneously add authentication and message integrity to HTTP messages by
-using a digital signature.
+desirable for a server or client to authenticate the sender of a
+particular message. It can also be desirable to ensure that the message 
+was not tampered with during transit. This document describes a way for 
+servers and clients to simultaneously add authentication and 
+message integrity to HTTP messages by using a digital signature.
   </t>
  </abstract>
  <note title="Feedback">
@@ -110,7 +110,7 @@ minutes using cloud-based rental servers to distribute the brute-force attack.
   <t>
 While it is true that most Basic and Digest authentication approaches are 
 operated over secure channels like TLS, revelations over pervasive monitoring 
-in 2012 have shown that TLS alone may not be secure enough to protect sensitive 
+in 2013 have shown that TLS alone may not be secure enough to protect sensitive 
 data.
   </t>
 
@@ -133,36 +133,64 @@ are no techniques in this proposal that are novel beyond the previous art, it
 is useful to standardize a simple and cryptographically strong mechanism for 
 digitally signing HTTP messages.
   </t> 
+
+  <section anchor="intro-requests" title="Using Signatures in HTTP Requests">
+   <t>
+It is common practice to protect sensitive website API functionality via 
+authentication mechanisms. Often, the entity accessing these APIs is a
+piece of automated software outside of an interactive human session. While
+there are mechanisms like OAuth and API secrets that are used to grant
+API access, each have their weaknesses such as unnecessary complexity 
+for particular use cases or the use of shared secrets which may not be 
+acceptable to an implementer.
+   </t>
+   <t>
+Digital signatures are widely used to provide authentication without 
+the need for shared secrets. They also do not require a round-trip in
+order to authenticate the client. A server need only have a mapping between
+the key being used to sign the content and the authorized entity to
+verify that a message was signed by that entity.
+   </t>
+   <t>
+This specification provides two mechanisms that can be used by a server
+to authenticate a client. The first is the 'Signature' HTTP Authentication
+Scheme, which may be used for interactive sessions. The second is the 
+Signature HTTP Header, which is typically used by automated software
+agents.
+   </t>
+  </section>
+
+  <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
+   <t>
+It is often assumed that if a server provides a certificate signed by a
+trusted Certificate Authority that the server has not been compromised.
+After the pervasive monitoring revelations of 2013, that is no longer a
+commonly held belief. For most low to moderate security transactions, TLS is 
+acceptable. However, for high security transactions, having an additional
+signature on the HTTP header allows a client to ensure that even if
+the transport channel has been compromised, that the content of the
+messages have not been compromised.
+   </t>
+   <t>
+This specification provides a HTTP Signature Header mechanism that can be 
+used by a client to authenticate the sender of a message and ensure that
+particular headers have not been modified in transit.
+   </t>
+  </section>
  
  </section>
  
- <section anchor="auth" title="Signature Authentication Scheme">
-
+ <section anchor="components" title="The Components of a Signature">
   <t>
-The "signature" authentication scheme is based on the model that the client must
-authenticate itself with a digital signature produced by either a private
-asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
-is parameterized enough such that it is not bound to any particular key type or
-signing algorithm.  However, it does explicitly assume that clients can send an
-HTTP `Date` header.
+There are a number of components in a signature that are common between the
+'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header. This
+section details the components of a digital signature.
   </t>
-  
-  <section anchor="header" title="Authorization Header">
-
-   <t>
-The client is expected to send an Authorization header 
-(as defined in 
-<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
-target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
-Section 4.1</eref>) where the "auth-scheme" is "Signature" and the 
-"auth-param" parameters meet the requirements listed below:
-   </t>
 
    <section anchor="params" title="Signature Parameters">
 
     <t>
-The following section details the signature parameters of the Authorization
-Header.
+The following section details the signature parameters.
     </t>
 
     <section anchor="keyId" title="keyId">
@@ -213,10 +241,10 @@ The `signature` parameter is then set to the base 64 encoding of the signature.
 
    <section anchor="ambiguity" title="Ambiguous Parameters">
     <t>
-If any of the Signature scheme parameter names are erroneously duplicated in the 
-Authorization header field, then the last parameter defined MUST be used. Any
-parameter that is not recognized as a Signature scheme parameter, or is
-not well-formed, MUST be ignored.
+If any of the parameters listed above are erroneously duplicated in the 
+associated header field, then the last parameter defined MUST be used. Any
+parameter that is not recognized as a parameter, or is not well-formed, 
+MUST be ignored.
     </t>
    </section>
    
@@ -251,8 +279,34 @@ If value is not the last value then append an ASCII newline `\n`.
      </t>
     </list>
    </t>   
+  </section>
+ </section>
+  
+ <section anchor="auth" title="The 'Signature' HTTP Authentication Scheme">
+
+  <t>
+The "signature" authentication scheme is based on the model that the client must
+authenticate itself with a digital signature produced by either a private
+asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
+is parameterized enough such that it is not bound to any particular key type or
+signing algorithm.  However, it does explicitly assume that clients can send an
+HTTP `Date` header.
+  </t>
+  
+  <section anchor="header" title="Authorization Header">
+
    <t>
-The rest of this section uses the following HTTP request as an example.
+The client is expected to send an Authorization header 
+(as defined in 
+<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
+target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
+Section 4.1</eref>) where the "auth-scheme" is "Signature" and the 
+"auth-param" parameters meet the requirements listed in 
+Section 2: The Components of a Signature.
+   </t>
+
+   <t>
+The rest if this section uses the following HTTP request as an example.
 
     <figure>
      <artwork>
@@ -278,6 +332,16 @@ The following sections also assume that the "rsa-key-1" keyId refers to a
 private key known to the client and a public key known to the server. 
 The "hmac-key-1" keyId refers to key known to the client and server.
    </t>
+
+   <section anchor="isa" title="Initiating Signature Authorization">
+
+    <t>
+A server may notify a client when a protected resource could be accessed by
+authenticating itself to the server. To initiate this process, the server
+will request that the client authenticate itself via a XXX response code.
+XXX
+    </t>
+   </section>
    
    <section anchor="rsa-example" title="RSA Example">
    
@@ -287,8 +351,7 @@ The authorization header and signature would be generated as:
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
 headers="(request-line) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"
-     </artwork>
+signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
    
@@ -300,8 +363,7 @@ The client would compose the signing string as:
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
-content-length: 18
-     </artwork>
+content-length: 18</artwork>
     </figure>
 Note that the '\n' symbols above are included to demonstrate where the new 
 line character should be inserted. There is no new line on the final line of
@@ -315,8 +377,7 @@ be generated as:
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
 headers="(request-line) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"
-     </artwork>
+signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
   </section>
@@ -354,7 +415,122 @@ content-length: 18
    </section>
   </section>
 
- </section>
+ <section anchor="auth" title="The 'Signature' HTTP Header">
+
+  <t>
+The "signature" HTTP Header is based on the model that the sender must
+authenticate itself with a digital signature produced by either a private
+asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
+is parameterized enough such that it is not bound to any particular key type or
+signing algorithm.  However, it does explicitly assume that senders can send an
+HTTP `Date` header.
+  </t>
+  
+  <section anchor="header" title="Authorization Header">
+
+   <t>
+The sender is expected to send an Signature header 
+(as defined in 
+<xref target="I-D.ietf-httpbis-p7-auth">XXX</xref>, <eref 
+target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
+Section 4.1</eref>) where the "header" is "Signature" and the 
+"XXX-param" parameters meet the requirements listed in 
+Section 2: The Components of a Signature.
+   </t>
+
+   <t>
+The rest if this section uses the following HTTP request as an example.
+
+    <figure>
+     <artwork>
+POST /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+Content-Type: application/json
+Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Content-Length: 18
+
+{"hello": "world"}</artwork>
+    </figure>
+   </t>
+   
+   <t>
+The following sections assume that the "rsa-key-1" keyId refers to a 
+private key known to the client and a public key known to the server. 
+The "hmac-key-1" keyId refers to key known to the client and server.
+   </t>
+   
+   <section anchor="rsa-example" title="RSA Example">
+   
+   <t>
+The signature header and signature would be generated as:
+    <figure>
+     <artwork>
+Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
+headers="(request-line) host date digest content-length",
+signature="Base64(RSA-SHA256(signing string))"</artwork>
+    </figure>
+   </t>
+   
+   <t>
+The client would compose the signing string as:
+    <figure>
+     <artwork>
+(request-line): post /foo\n
+host: example.org\n
+date: Tue, 07 Jun 2014 20:51:35 GMT\n
+digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-length: 18</artwork>
+    </figure>
+Note that the '\n' symbols above are included to demonstrate where the new 
+line character should be inserted. There is no new line on the final line of
+the signing string.
+   </t>
+
+   <t>
+For an RSA-based signature, the authorization header and signature would then
+be generated as:
+    <figure>
+     <artwork>
+Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
+headers="(request-line) host date digest content-length",
+signature="Base64(RSA-SHA256(signing string))"</artwork>
+    </figure>
+   </t>
+  </section>
+  
+  <section anchor="hmac-example" title="HMAC Example">
+
+   <t>
+For an HMAC-based signature without a list of headers specified, the 
+authorization header and signature would be generated as:
+    <figure>
+     <artwork>
+Signature: keyId="hmac-key-1",algorithm="hmac-sha256",
+headers="(request-line) host date digest content-length",
+signature="Base64(HMAC-SHA256(signing string))"</artwork>
+    </figure>
+   </t>
+
+   <t>
+The only difference between the RSA Example and the HMAC Example is the
+signature algorithm that is used. The client would compose the signing string 
+in the same way as the RSA Example above:
+    <figure>
+     <artwork>
+(request-line): post /foo\n
+host: example.org\n
+date: Tue, 07 Jun 2014 20:51:35 GMT\n
+digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-length: 18
+     </artwork>
+    </figure>
+   </t>
+
+    </section>
+   </section>
+  </section>
+
 </middle>
 <back>
  <references title="Normative References">
@@ -477,8 +653,7 @@ If a list of headers is not included, the date is the only header that is
 signed by default. The string to sign would be:
     <figure>
      <artwork>
-date: Thu, 05 Jan 2014 21:31:40 GMT
-    </artwork>
+date: Thu, 05 Jan 2014 21:31:40 GMT</artwork>
    </figure>
    </t>
    
@@ -489,8 +664,18 @@ The Authorization header would be:
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
 signature="ATp0r26dbMIxOopqw0OfABDT7CKMIoENumuruOtarj8n/97Q3htH
 FYpH8yOSQk3Z5zh8UxUym6FYTb5+A0Nz3NRsXJibnYi7brE/4tx5But9kkFGzG+
-xpUmimN4c3TMN7OFH//+r8hBf7BT9/GmHDUVZT2JzWGLZES2xDOUuMtA="
-    </artwork>
+xpUmimN4c3TMN7OFH//+r8hBf7BT9/GmHDUVZT2JzWGLZES2xDOUuMtA="</artwork>
+   </figure>
+   </t>
+
+   <t>
+The Signature header would be:
+    <figure>
+     <artwork>
+Signature: keyId="Test",algorithm="rsa-sha256",
+signature="ATp0r26dbMIxOopqw0OfABDT7CKMIoENumuruOtarj8n/97Q3htH
+FYpH8yOSQk3Z5zh8UxUym6FYTb5+A0Nz3NRsXJibnYi7brE/4tx5But9kkFGzG+
+xpUmimN4c3TMN7OFH//+r8hBf7BT9/GmHDUVZT2JzWGLZES2xDOUuMtA="</artwork>
    </figure>
    </t>
   </section>
@@ -533,8 +718,7 @@ host: example.com
 date: Thu, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18
-     </artwork>
+content-length: 18</artwork>
     </figure>
    </t>
    
@@ -546,8 +730,19 @@ Authorization: Signature keyId="Test",algorithm="rsa-sha256",
 headers="(request-line) host date content-type digest content-length",
 signature="jgSqYK0yKclIHfF9zdApVEbDp5eqj8C4i4X76pE+XHoxugXv7q
 nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
-Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="
-     </artwork>
+Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
+    </figure>
+   </t>
+   
+   <t>
+The Signature header would be:
+    <figure>
+     <artwork>
+Signature: keyId="Test",algorithm="rsa-sha256",
+headers="(request-line) host date content-type digest content-length",
+signature="jgSqYK0yKclIHfF9zdApVEbDp5eqj8C4i4X76pE+XHoxugXv7q
+nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
+Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
     </figure>
    </t>
  </section>
