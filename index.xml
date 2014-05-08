@@ -100,8 +100,8 @@ with common password usage behavior.
 Password database compromises between 2010 to 2014 have shown that people 
 regularly use weak passwords and share the same
 password across multiple websites. The use of Basic authentication over a
-regular HTTP channel provides no protection. Digest authentication, while 
-providing some level of protection, still leaves the scheme open to 
+regular HTTP channel provides very little protection. Digest authentication, while 
+providing a little more protection, still leaves the scheme open to 
 brute-force attacks that are capable of discovering a weak or random 8 character 
 password in less than 3 hours using a single commodity computer and mere 
 minutes using cloud-based rental servers to distribute the brute-force attack.
@@ -197,8 +197,8 @@ The following section details the signature parameters.
      <t>
 REQUIRED.  The `keyId` field is an opaque string that the server can use to look
 up the component they need to validate the signature.  It could be an SSH key
-fingerprint, an LDAP DN, etc.  Management of keys and assignment of `keyId` is
-out of scope for this document.
+fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management 
+of keys and assignment of `keyId` is out of scope for this document.
      </t>
     </section>
     
@@ -218,11 +218,11 @@ marked "deprecated".
 
      <t>
 OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
-used to sign the request.  If specified, it should be a lowercased,
-quoted list of HTTP header fields, separated by a single space character.  
-By default, only one HTTP header is signed, which is the `Date` header.  
-Note that the list order is important, and MUST be specified in the order 
-the values are concatenated together during signing. 
+included when generating the signature for message.  If specified, it 
+should be a lowercased, quoted list of HTTP header fields, separated by a 
+single space character. By default, only one HTTP header is signed, which is 
+the `Date` header. Note that the list order is important, and MUST be 
+specified in the order the values are concatenated together during signing. 
      </t>
     </section>
     
@@ -231,7 +231,7 @@ the values are concatenated together during signing.
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
 as described in <xref target="RFC4648">RFC 4648</xref>, 
 <eref target="http://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
-The client uses the `algorithm` and `headers` request parameters to form a 
+The client uses the `algorithm` and `headers` signature parameters to form a 
 canonicalized `signing string`.  This `signing string` is then signed with the 
 key associated with `keyId` and the algorithm corresponding to `algorithm`.
 The `signature` parameter is then set to the base 64 encoding of the signature.
@@ -338,8 +338,19 @@ The "hmac-key-1" keyId refers to key known to the client and server.
     <t>
 A server may notify a client when a protected resource could be accessed by
 authenticating itself to the server. To initiate this process, the server
-will request that the client authenticate itself via a XXX response code.
-XXX
+will request that the client authenticate itself via a 401 response code.
+For example:
+    <figure>
+     <artwork>
+HTTP/1.1 401 Unauthorized
+Date: Thu, 08 Jun 2014 18:32:30 GMT
+Content-Length: 1234
+Content-Type: text/html
+WWW-Authenticate: Signature realm="Example"
+
+...
+</artwork>
+    </figure>
     </t>
    </section>
    
@@ -429,13 +440,16 @@ HTTP `Date` header.
   <section anchor="header" title="Authorization Header">
 
    <t>
-The sender is expected to send an Signature header 
+The sender is expected to transmit a header 
 (as defined in 
-<xref target="I-D.ietf-httpbis-p7-auth">XXX</xref>, <eref 
+<xref target="I-D.ietf-httpbis-p1-auth">HTTPbis 1.1, Part 1</xref>, <eref 
+target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-26#section-3.2">
+Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
+contains one or more "auth-param"s (as defined in 
+<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
 target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
-Section 4.1</eref>) where the "header" is "Signature" and the 
-"XXX-param" parameters meet the requirements listed in 
-Section 2: The Components of a Signature.
+Section 4.1</eref>) where the "auth-param" parameters meet the requirements 
+listed in Section 2: The Components of a Signature.
    </t>
 
    <t>
