@@ -282,7 +282,7 @@ If value is not the last value then append an ASCII newline `\n`.
   </section>
  </section>
   
- <section anchor="auth" title="The 'Signature' HTTP Authentication Scheme">
+ <section anchor="auth-scheme" title="The 'Signature' HTTP Authentication Scheme">
 
   <t>
 The "signature" authentication scheme is based on the model that the client must
@@ -293,7 +293,7 @@ signing algorithm.  However, it does explicitly assume that clients can send an
 HTTP `Date` header.
   </t>
   
-  <section anchor="header" title="Authorization Header">
+  <section anchor="auth-header" title="Authorization Header">
 
    <t>
 The client is expected to send an Authorization header 
@@ -333,7 +333,7 @@ private key known to the client and a public key known to the server.
 The "hmac-key-1" keyId refers to key known to the client and server.
    </t>
 
-   <section anchor="isa" title="Initiating Signature Authorization">
+   <section anchor="auth-isa" title="Initiating Signature Authorization">
 
     <t>
 A server may notify a client when a protected resource could be accessed by
@@ -354,7 +354,7 @@ WWW-Authenticate: Signature realm="Example"
     </t>
    </section>
    
-   <section anchor="rsa-example" title="RSA Example">
+   <section anchor="auth-rsa-example" title="RSA Example">
    
    <t>
 The authorization header and signature would be generated as:
@@ -393,7 +393,7 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
    </t>
   </section>
   
-  <section anchor="hmac-example" title="HMAC Example">
+  <section anchor="auth-hmac-example" title="HMAC Example">
 
    <t>
 For an HMAC-based signature without a list of headers specified, the 
@@ -426,7 +426,7 @@ content-length: 18
    </section>
   </section>
 
- <section anchor="auth" title="The 'Signature' HTTP Header">
+ <section anchor="sig" title="The 'Signature' HTTP Header">
 
   <t>
 The "signature" HTTP Header is based on the model that the sender must
@@ -437,12 +437,12 @@ signing algorithm.  However, it does explicitly assume that senders can send an
 HTTP `Date` header.
   </t>
   
-  <section anchor="header" title="Authorization Header">
+  <section anchor="sig-header" title="Signature Header">
 
    <t>
 The sender is expected to transmit a header 
 (as defined in 
-<xref target="I-D.ietf-httpbis-p1-auth">HTTPbis 1.1, Part 1</xref>, <eref 
+<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, <eref 
 target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-26#section-3.2">
 Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
 contains one or more "auth-param"s (as defined in 
@@ -474,7 +474,7 @@ private key known to the client and a public key known to the server.
 The "hmac-key-1" keyId refers to key known to the client and server.
    </t>
    
-   <section anchor="rsa-example" title="RSA Example">
+   <section anchor="sig-rsa-example" title="RSA Example">
    
    <t>
 The signature header and signature would be generated as:
@@ -513,7 +513,7 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
    </t>
   </section>
   
-  <section anchor="hmac-example" title="HMAC Example">
+  <section anchor="sig-hmac-example" title="HMAC Example">
 
    <t>
 For an HMAC-based signature without a list of headers specified, the 
@@ -601,8 +601,8 @@ example entry in this registry is included below:
     <artwork>
 Signature Parameter: nonce
 Reference to specification: [HTTP_AUTH_SIGNATURE_NONCE], Section XYZ.
-Notes (optional): The HTTP Signature Nonces specification details how to use 
-  HTTP Signatures over a unsecured channel like HTTP.
+Notes (optional): The HTTP Signature Nonces specification details 
+how to use HTTP Signatures over a unsecured channel like HTTP.
     </artwork>
    </figure>
   </t>
@@ -610,8 +610,8 @@ Notes (optional): The HTTP Signature Nonces specification details how to use
 
  <section anchor="appendix-c" title="Test Values">
   <t>
-The following test data uses the following RSA 2048-bit keys, which we will 
-refer to as `keyId=Test` in the following samples:
+The following test data uses the following RSA 2048-bit keys, 
+which we will refer to as `keyId=Test` in the following samples:
 
    <figure>
     <artwork>
