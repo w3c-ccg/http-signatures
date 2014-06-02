@@ -90,7 +90,7 @@ defines Basic and Digest authentication mechanisms, and
 <xref target="RFC5246">TLS 1.2</xref>
 defines cryptographically stronger client authentication, all of which are 
 widely employed on the Internet today.  The burdens of PKI prevent some
-web service operators from deploying that methodoloy, and so some of those
+web service operators from deploying that methodology, and so some of those
 organizations fall back to Basic or Digest authentication. Basic and
 Digest authentication provide poor security characteristics when combined 
 with common password usage behavior. 
