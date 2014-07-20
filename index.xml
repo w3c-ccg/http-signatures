@@ -84,46 +84,19 @@ related to this specification should be sent to
 
  <section anchor="intro" title="Introduction">
   <t>
-This protocol extension is intended to provide a standard way for clients to 
-sign HTTP messages.  <xref target="RFC2617">HTTP Authentication</xref> 
-defines Basic and Digest authentication mechanisms, and 
-<xref target="RFC5246">TLS 1.2</xref>
-defines cryptographically stronger client authentication, all of which are 
-widely employed on the Internet today.  The burdens of PKI prevent some
-web service operators from deploying that methodology, and so some of those
-organizations fall back to Basic or Digest authentication. Basic and
-Digest authentication provide poor security characteristics when combined 
-with common password usage behavior. 
+This protocol extension is intended to provide a simple and standard way for 
+clients to sign HTTP messages.
   </t>
-
+  
   <t>
-Password database compromises between 2010 to 2014 have shown that people 
-regularly use weak passwords and share the same
-password across multiple websites. The use of Basic authentication over a
-regular HTTP channel provides very little protection. Digest authentication, while 
-providing a little more protection, still leaves the scheme open to 
-brute-force attacks that are capable of discovering a weak or random 8 character 
-password in less than 3 hours using a single commodity computer and mere 
-minutes using cloud-based rental servers to distribute the brute-force attack.
-  </t>
-
-  <t>
-While it is true that most Basic and Digest authentication approaches are 
-operated over secure channels like TLS, revelations over pervasive monitoring 
-in 2013 have shown that TLS alone may not be secure enough to protect sensitive 
-data.
-  </t>
-
-  <t>
-Additionally, <xref target="RFC6749">OAuth 2.0</xref> provides a 
-fully-specified alternative for authorization of web service requests, but is 
-not always ideal for machine to machine communication, as the token acquisition 
-steps generally imply a fixed infrastructure that may not make sense to a 
-service provider. For example, the use of symmetric keys and the distribution
-of hundreds of thousands of those keys across multiple datacenters around the
-world create multiple points of attack where a successful attack results in
-a large gain for the attacker and thus an even bigger problem for the service 
-provider and their customers.
+<xref target="RFC2617">HTTP Authentication</xref> defines Basic and Digest 
+authentication mechanisms, <xref target="RFC5246">TLS 1.2</xref>
+defines cryptographically strong transport layer security, and 
+<xref target="RFC6749">OAuth 2.0</xref> provides a 
+fully-specified alternative for authorization of web service requests. Each of
+these approaches are employed on the Internet today with varying degrees of 
+protection. However, none of these schemes are designed to cryptographically 
+sign the HTTP messages themselves.
   </t>
 
   <t>
@@ -162,16 +135,9 @@ agents.
 
   <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
    <t>
-It is often assumed that if a server provides a certificate signed by a
-trusted Certificate Authority that the server has not been compromised.
-After the pervasive monitoring revelations of 2013, that is no longer a
-commonly held belief. For most low to moderate security transactions, TLS is 
-acceptable. However, for high security transactions, having an additional
-signature on the HTTP header allows a client to ensure that even if
-the transport channel has been compromised, that the content of the
-messages have not been compromised.
-   </t>
-   <t>
+For high security transactions, having an additional signature on the HTTP 
+header allows a client to ensure that even if the transport channel has been 
+compromised, that the content of the messages have not been compromised.
 This specification provides a HTTP Signature Header mechanism that can be 
 used by a client to authenticate the sender of a message and ensure that
 particular headers have not been modified in transit.
