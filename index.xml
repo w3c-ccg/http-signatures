@@ -184,13 +184,15 @@ marked "deprecated".
 
      <t>
 OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
-included when generating the signature for message.  If specified, it 
+included when generating the signature for the message.  If specified, it 
 should be a lowercased, quoted list of HTTP header fields, separated by a 
-single space character. By default, only one HTTP header is signed, which is 
-the `Date` header. Note that the list order is important, and MUST be 
-specified in the order the HTTP header field-value pairs are concatenated 
-together during signing. 
+single space character. If not specified, implementations MUST operate as if 
+the field were specified with a single value, the `Date` header, in the list 
+of HTTP headers. Note that the list order is important, and MUST be specified in 
+the order the HTTP header field-value pairs are concatenated together 
+during signing.
      </t>
+
     </section>
     
     <section anchor="signature" title="signature">
