@@ -7,8 +7,8 @@
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc6376 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6376.xml">
   <!ENTITY rfc6749 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6749.xml">
-  <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-25.xml">
-  <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-25.xml">
+  <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-26.xml">
+  <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-26.xml">
   <!ENTITY jwa SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
@@ -239,10 +239,14 @@ method URL.
      <t>
 Create the header field string by concatenating the lowercased header field 
 name followed with an ASCII colon `:`, an ASCII space ` `, and the header 
-field value. The value MUST NOT be modified or canonicalized in any way. If 
-there are multiple instances of the same header field, all header field values 
-associated with the header field MUST be concatenated and used in the order in 
-which they will appear in the transmitted HTTP message.
+field value. Leading and trailing optional whitespace (OWS) in the header field 
+value MUST be omitted (as specified in 
+<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, 
+<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-26#section-3.2.4">Section 3.2.4</eref>). 
+Any other modification to the header field value MUST NOT be made. If there are 
+multiple instances of the same header field, all header field values associated 
+with the header field MUST be concatenated and used in the order in which 
+they will appear in the transmitted HTTP message.
      </t>
      <t>
 If value is not the last value then append an ASCII newline `\n`.
