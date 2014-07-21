@@ -97,7 +97,11 @@ defines cryptographically strong transport layer security, and
 fully-specified alternative for authorization of web service requests. Each of
 these approaches are employed on the Internet today with varying degrees of 
 protection. However, none of these schemes are designed to cryptographically 
-sign the HTTP messages themselves.
+sign the HTTP messages themselves, which is required in order to ensure
+end-to-end message integrity. An added benefit of signing the HTTP message
+for the purposes of end-to-end message integrity is that the client can be
+authenticated using the same mechanism without the need for multiple
+round-trips.
   </t>
 
   <t>
