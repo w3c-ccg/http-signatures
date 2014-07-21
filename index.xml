@@ -3,6 +3,7 @@
   <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
   <!ENTITY rfc2617 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml">
   <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3230.xml">
+  <!ENTITY rfc3230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml">
   <!ENTITY rfc4648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc6376 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6376.xml">
@@ -225,16 +226,17 @@ the values of each HTTP header field in the `headers` Signature parameter,
 in the order they appear in the `headers` Signature parameter. It is out of 
 scope for this document to dictate what header fields 
 an application will want to enforce, but implementers SHOULD at minimum 
-include the method + URL (request-line), Host, and Date header fields.
+include the request target and Date header fields.
    </t>
    <t>
-To include the HTTP request line in the signature calculation, use the 
-special `(request-line)` header field name.
+To include the HTTP request target in the signature calculation, use the 
+special `(request-target)` header field name.
     <list style="numbers">
      <t>
-If the header field name is `(request-line)` then generate the header field 
-value by concatenating the lowercased method name, an ASCII space, and the 
-method URL.
+If the header field name is `(request-target)` then generate the header field 
+value by concatenating the lowercased :method, an ASCII space, the 
+:authority, an ASCII space, and the :path pseudo-headers (as specified in
+<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-http2-13#section-8.1.2.1">HTTP/2, Section 8.1.2.1</eref>).
      </t>
      <t>
 Create the header field string by concatenating the lowercased header field 
@@ -254,6 +256,7 @@ If value is not the last value then append an ASCII newline `\n`.
     </list>
    </t>   
   </section>
+  
  </section>
   
  <section anchor="auth-scheme" title="The 'Signature' HTTP Authentication Scheme">
@@ -335,7 +338,7 @@ The authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -344,7 +347,7 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
 The client would compose the signing string as:
     <figure>
      <artwork>
-(request-line): post /foo\n
+(request-target): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -361,7 +364,7 @@ be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -375,7 +378,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(HMAC-SHA256(signing string))"
      </artwork>
     </figure>
@@ -387,7 +390,7 @@ signature algorithm that is used. The client would compose the signing string
 in the same way as the RSA Example above:
     <figure>
      <artwork>
-(request-line): post /foo\n
+(request-target): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -455,7 +458,7 @@ The signature header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -464,7 +467,7 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
 The client would compose the signing string as:
     <figure>
      <artwork>
-(request-line): post /foo\n
+(request-target): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -481,7 +484,7 @@ be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -495,7 +498,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="hmac-key-1",algorithm="hmac-sha256",
-headers="(request-line) host date digest content-length",
+headers="(request-target) host date digest content-length",
 signature="Base64(HMAC-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -506,7 +509,7 @@ signature algorithm that is used. The client would compose the signing string
 in the same way as the RSA Example above:
     <figure>
      <artwork>
-(request-line): post /foo\n
+(request-target): post /foo\n
 host: example.org\n
 date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
@@ -670,11 +673,11 @@ xpUmimN4c3TMN7OFH//+r8hBf7BT9/GmHDUVZT2JzWGLZES2xDOUuMtA="</artwork>
 
   <section anchor="basic-test" title="Basic Test">
    <t>
-The minimum recommended data to sign is the (request-line), host, and date. In
+The minimum recommended data to sign is the (request-target), host, and date. In
 this case, the string to sign would be:
     <figure>
      <artwork>
-(request-line): post /foo?param=value&amp;pet=dog
+(request-target): post /foo?param=value&amp;pet=dog
 host: example.com
 date: Thu, 05 Jan 2014 21:31:40 GMT
     </artwork>
@@ -686,7 +689,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-headers="(request-line) host date", signature="KcLSABBj/m3v2Dhxi
+headers="(request-target) host date", signature="KcLSABBj/m3v2Dhxi
 CKJmzYJvnx74tDO1SaURD8Dr8XpugN5wpy8iBVJtpkHUIp4qBYpzx2QvD16t8X
 0BUMiKc53Age+baQFWwb2iYYJzvuUL+krrl/Q7H6fPBADBsHqEZ7IE8rR0Ys3l
 b7J5A6VB9J/4yVTRiBcxTypW/mpr5w="
@@ -701,7 +704,7 @@ A strong signature including all of the headers and a digest of the body of
 the HTTP request would result in the following signing string:
     <figure>
      <artwork>
-(request-line): post /foo?param=value&amp;pet=dog
+(request-target): post /foo?param=value&amp;pet=dog
 host: example.com
 date: Thu, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
@@ -715,7 +718,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-headers="(request-line) host date content-type digest content-length",
+headers="(request-target) host date content-type digest content-length",
 signature="jgSqYK0yKclIHfF9zdApVEbDp5eqj8C4i4X76pE+XHoxugXv7q
 nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
 Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
@@ -727,7 +730,7 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
-headers="(request-line) host date content-type digest content-length",
+headers="(request-target) host date content-type digest content-length",
 signature="jgSqYK0yKclIHfF9zdApVEbDp5eqj8C4i4X76pE+XHoxugXv7q
 nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
 Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
