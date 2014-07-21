@@ -386,7 +386,9 @@ The "hmac-key-1" keyId refers to key known to the client and server.
     <t>
 A server may notify a client when a protected resource could be accessed by
 authenticating itself to the server. To initiate this process, the server
-will request that the client authenticate itself via a 401 response code.
+will request that the client authenticate itself via a 401 response code. The
+server may optionally specify which HTTP headers it expects to be signed
+by specifying the `headers` parameter in the WWW-Authenticate header.
 For example:
     <figure>
      <artwork>
@@ -394,7 +396,7 @@ HTTP/1.1 401 Unauthorized
 Date: Thu, 08 Jun 2014 18:32:30 GMT
 Content-Length: 1234
 Content-Type: text/html
-WWW-Authenticate: Signature realm="Example"
+WWW-Authenticate: Signature realm="Example",headers="(request-target) date"
 
 ...
 </artwork>
