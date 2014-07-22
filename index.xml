@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-02">
+     docName="draft-cavage-http-signatures-03">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -55,7 +55,7 @@
   </address>
  </author>
 
- <date month="May" year="2014" />
+ <date month="July" year="2014" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
