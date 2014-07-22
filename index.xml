@@ -8,8 +8,8 @@
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc6376 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6376.xml">
   <!ENTITY rfc6749 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6749.xml">
-  <!ENTITY httpbis-p1 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-26.xml">
-  <!ENTITY httpbis-p7 SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-26.xml">
+  <!ENTITY rfc7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
+  <!ENTITY rfc7235 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7235.xml">
   <!ENTITY jwa SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
@@ -247,8 +247,8 @@ Create the header field string by concatenating the lowercased header field
 name followed with an ASCII colon `:`, an ASCII space ` `, and the header 
 field value. Leading and trailing optional whitespace (OWS) in the header field 
 value MUST be omitted (as specified in 
-<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, 
-<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-26#section-3.2.4">Section 3.2.4</eref>). 
+<xref target="RFC7230">RFC7230</xref>, 
+<eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>). 
 Any other modification to the header field value MUST NOT be made. If there are 
 multiple instances of the same header field, all header field values associated 
 with the header field MUST be concatenated and used in the order in which 
@@ -346,8 +346,8 @@ HTTP `Date` header.
    <t>
 The client is expected to send an Authorization header 
 (as defined in 
-<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
-target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
+<xref target="I-D.ietf-rfc7235-auth">RFC 7235</xref>, <eref 
+target="http://tools.ietf.org/html/draft-ietf-rfc7235-auth-25#section-4.1">
 Section 4.1</eref>) where the "auth-scheme" is "Signature" and the 
 "auth-param" parameters meet the requirements listed in 
 Section 2: The Components of a Signature.
@@ -492,12 +492,12 @@ HTTP `Date` header.
    <t>
 The sender is expected to transmit a header 
 (as defined in 
-<xref target="I-D.ietf-httpbis-p1-messaging">HTTPbis 1.1, Part 1</xref>, <eref 
-target="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-26#section-3.2">
+<xref target="RFC7230">RFC 7230</xref>, <eref 
+target="http://tools.ietf.org/html/rfc7230#section-3.2">
 Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
 contains one or more "auth-param"s (as defined in 
-<xref target="I-D.ietf-httpbis-p7-auth">HTTPbis 1.1, Part 7</xref>, <eref 
-target="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-25#section-4.1">
+<xref target="RFC7235">RFC 7235</xref>, <eref 
+target="http://tools.ietf.org/html/rfc7235#section-4.1">
 Section 4.1</eref>) where the "auth-param" parameters meet the requirements 
 listed in Section 2: The Components of a Signature.
    </t>
@@ -601,8 +601,8 @@ content-length: 18
   &rfc2119;
   &rfc4648;
   &rfc6376;
-  &httpbis-p1;
-  &httpbis-p7;
+  &rfc7230;
+  &rfc7235;
   &jwa;
  </references>
  <references title="Informative References">
