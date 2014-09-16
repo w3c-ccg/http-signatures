@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-03">
+     docName="draft-cavage-http-signatures-04">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -55,7 +55,7 @@
   </address>
  </author>
 
- <date month="July" year="2014" />
+ <date month="September" year="2014" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -249,16 +249,50 @@ field value. Leading and trailing optional whitespace (OWS) in the header field
 value MUST be omitted (as specified in 
 <xref target="RFC7230">RFC7230</xref>, 
 <eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>). 
-Any other modification to the header field value MUST NOT be made. If there are 
-multiple instances of the same header field, all header field values associated 
-with the header field MUST be concatenated and used in the order in which 
-they will appear in the transmitted HTTP message.
+If there are multiple instances of the same header field, all header field 
+values associated with the header field MUST be concatenated, separated by a
+ASCII comma and an ASCII space `, `, and used in the order in which 
+they will appear in the transmitted HTTP message. Any other modification to 
+the header field value MUST NOT be made. 
      </t>
      <t>
 If value is not the last value then append an ASCII newline `\n`.
      </t>
     </list>
-   </t>   
+   </t>
+   
+   <t>
+To illustrate the rules specified above, assume a `headers` parameter list
+with the value of `(request-target) host date cache-control x-example` with
+the following HTTP request headers:
+
+    <figure>
+     <artwork>
+GET /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+X-Example: Example header
+    with some whitespace.
+Cache-Control: max-age=60
+Cache-Control: must-revalidate
+     </artwork>
+    </figure>
+   </t>
+   
+   <t>
+For the HTTP request headers above, the corresponding signature string is:
+
+    <figure>
+     <artwork>
+(request-target): get /foo
+host: example.org
+date: Tue, 07 Jun 2014 20:51:35 GMT
+cache-control: max-age=60, must-revalidate
+x-example: Example header with some whitespace.
+     </artwork>
+    </figure>
+   </t>
+   
   </section>
   
   <section anchor="create" title="Creating a Signature">
