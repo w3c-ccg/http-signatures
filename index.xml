@@ -19,23 +19,22 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-04">
+     docName="draft-cavage-http-signatures-05">
 <front>
  <title>Signing HTTP Messages</title>
 
  <author initials="M.C." surname="Cavage" fullname="Mark Cavage">
-  <organization>Joyent</organization>
+  <organization>Oracle</organization>
   <address>
    <postal>
-    <street>One Embarcadero Center</street>
-    <street>9th Floor</street>
-    <city>San Francisco</city> <region>CA</region>
-    <code>94111</code>
+    <street>500 Oracle Parkway</street>
+    <city>Redwood Shores</city> <region>CA</region>
+    <code>94065</code>
     <country>US</country>
    </postal>
-   <phone>+1 415 400 0626 </phone>
-   <email>mark.cavage@joyent.com</email>
-   <uri>http://www.joyent.com/</uri>
+   <phone>+1 415 400 0626</phone>
+   <email>mcavage@gmail.com</email>
+   <uri>http://www.oracle.com/</uri>
   </address>
  </author>
 
@@ -55,7 +54,7 @@
   </address>
  </author>
 
- <date month="January" year="2015" />
+ <date month="October" year="2015" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
