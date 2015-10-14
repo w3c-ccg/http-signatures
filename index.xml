@@ -239,7 +239,7 @@ special `(request-target)` header field name.
 If the header field name is `(request-target)` then generate the header field 
 value by concatenating the lowercased :method, an ASCII space, and 
 the :path pseudo-headers (as specified in
-<eref target="http://tools.ietf.org/html/draft-ietf-httpbis-http2-13#section-8.1.2.1">HTTP/2, Section 8.1.2.1</eref>).
+<eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
      </t>
      <t>
 Create the header field string by concatenating the lowercased header field 
