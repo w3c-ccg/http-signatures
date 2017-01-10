@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-05">
+     docName="draft-cavage-http-signatures-06">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -42,8 +42,7 @@
   <organization>Digital Bazaar</organization>
   <address>
    <postal>
-    <street>1700 Kraft Drive</street>
-    <street>Suite 2408</street>
+    <street>203 Roanoke Street W.</street>
     <city>Blacksburg</city> <region>VA</region>
     <code>24060</code>
     <country>US</country>
@@ -54,7 +53,7 @@
   </address>
  </author>
 
- <date month="October" year="2015" />
+ <date month="January" year="2017" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
