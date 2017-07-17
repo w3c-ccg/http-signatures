@@ -18,8 +18,8 @@
 <?rfc toc="yes" ?>
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
-<rfc category="std" ipr="trust200902" submissionType="independent" 
-     docName="draft-cavage-http-signatures-06">
+<rfc category="std" ipr="trust200902" submissionType="independent"
+     docName="draft-cavage-http-signatures-07">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -53,7 +53,7 @@
   </address>
  </author>
 
- <date month="January" year="2017" />
+ <date month="July" year="2017" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -63,18 +63,20 @@
   <t>
 When communicating over the Internet using the HTTP protocol, it can be
 desirable for a server or client to authenticate the sender of a
-particular message. It can also be desirable to ensure that the message 
-was not tampered with during transit. This document describes a way for 
-servers and clients to simultaneously add authentication and 
+particular message. It can also be desirable to ensure that the message
+was not tampered with during transit. This document describes a way for
+servers and clients to simultaneously add authentication and
 message integrity to HTTP messages by using a digital signature.
   </t>
  </abstract>
  <note title="Feedback">
   <t>
-This specification is a part of the 
-<eref target="https://web-payments.org/">Web Payments</eref> work. Feedback 
-related to this specification should be sent to
-<eref target="mailto:public-webpayments@w3.org">public-webpayments@w3.org</eref>.
+This specification is a joint work product of the
+<eref target="https://w3c-dvcg.github.io/">W3C Digital Verification Community Group</eref>
+and the
+<eref target="https://opencreds.org/">W3C Credentials Community Group</eref>.
+Feedback related to this specification should be sent to
+<eref target="mailto:public-credentials@w3.org">public-credentials@w3.org</eref>.
   </t>
  </note>
 </front>
@@ -83,18 +85,18 @@ related to this specification should be sent to
 
  <section anchor="intro" title="Introduction">
   <t>
-This protocol extension is intended to provide a simple and standard way for 
+This protocol extension is intended to provide a simple and standard way for
 clients to sign HTTP messages.
   </t>
-  
+
   <t>
-<xref target="RFC2617">HTTP Authentication</xref> defines Basic and Digest 
+<xref target="RFC2617">HTTP Authentication</xref> defines Basic and Digest
 authentication mechanisms, <xref target="RFC5246">TLS 1.2</xref>
-defines cryptographically strong transport layer security, and 
-<xref target="RFC6749">OAuth 2.0</xref> provides a 
+defines cryptographically strong transport layer security, and
+<xref target="RFC6749">OAuth 2.0</xref> provides a
 fully-specified alternative for authorization of web service requests. Each of
-these approaches are employed on the Internet today with varying degrees of 
-protection. However, none of these schemes are designed to cryptographically 
+these approaches are employed on the Internet today with varying degrees of
+protection. However, none of these schemes are designed to cryptographically
 sign the HTTP messages themselves, which is required in order to ensure
 end-to-end message integrity. An added benefit of signing the HTTP message
 for the purposes of end-to-end message integrity is that the client can be
@@ -106,22 +108,22 @@ round-trips.
 Several web service providers have invented their own schemes for signing
 HTTP messages, but to date, none have been standardized. While there
 are no techniques in this proposal that are novel beyond the previous art, it
-is useful to standardize a simple and cryptographically strong mechanism for 
+is useful to standardize a simple and cryptographically strong mechanism for
 digitally signing HTTP messages.
-  </t> 
+  </t>
 
   <section anchor="intro-requests" title="Using Signatures in HTTP Requests">
    <t>
-It is common practice to protect sensitive website API functionality via 
+It is common practice to protect sensitive website API functionality via
 authentication mechanisms. Often, the entity accessing these APIs is a
 piece of automated software outside of an interactive human session. While
 there are mechanisms like OAuth and API secrets that are used to grant
-API access, each have their weaknesses such as unnecessary complexity 
-for particular use cases or the use of shared secrets which may not be 
+API access, each have their weaknesses such as unnecessary complexity
+for particular use cases or the use of shared secrets which may not be
 acceptable to an implementer.
    </t>
    <t>
-Digital signatures are widely used to provide authentication without 
+Digital signatures are widely used to provide authentication without
 the need for shared secrets. They also do not require a round-trip in
 order to authenticate the client. A server need only have a mapping between
 the key being used to sign the content and the authorized entity to
@@ -130,7 +132,7 @@ verify that a message was signed by that entity.
    <t>
 This specification provides two mechanisms that can be used by a server
 to authenticate a client. The first is the 'Signature' HTTP Authentication
-Scheme, which may be used for interactive sessions. The second is the 
+Scheme, which may be used for interactive sessions. The second is the
 Signature HTTP Header, which is typically used by automated software
 agents.
    </t>
@@ -138,17 +140,17 @@ agents.
 
   <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
    <t>
-For high security transactions, having an additional signature on the HTTP 
-header allows a client to ensure that even if the transport channel has been 
+For high security transactions, having an additional signature on the HTTP
+header allows a client to ensure that even if the transport channel has been
 compromised, that the content of the messages have not been compromised.
-This specification provides a HTTP Signature Header mechanism that can be 
+This specification provides a HTTP Signature Header mechanism that can be
 used by a client to authenticate the sender of a message and ensure that
 particular headers have not been modified in transit.
    </t>
   </section>
- 
+
  </section>
- 
+
  <section anchor="components" title="The Components of a Signature">
   <t>
 There are a number of components in a signature that are common between the
@@ -166,45 +168,45 @@ The following section details the signature parameters.
      <t>
 REQUIRED.  The `keyId` field is an opaque string that the server can use to look
 up the component they need to validate the signature.  It could be an SSH key
-fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management 
+fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management
 of keys and assignment of `keyId` is out of scope for this document.
      </t>
     </section>
-    
+
     <section anchor="algorithm" title="algorithm">
 
      <t>
 REQUIRED. The `algorithm` parameter is used to specify the digital signature
 algorithm to use when generating the signature. Valid values for this
-parameter can be found in the Signature Algorithms registry located at 
+parameter can be found in the Signature Algorithms registry located at
 <eref target="http://www.iana.org/assignments/signature-algorithms">
 http://www.iana.org/assignments/signature-algorithms</eref> and MUST NOT be
 marked "deprecated".
      </t>
     </section>
-    
+
     <section anchor="headers" title="headers">
 
      <t>
 OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
-included when generating the signature for the message.  If specified, it 
-should be a lowercased, quoted list of HTTP header fields, separated by a 
-single space character. If not specified, implementations MUST operate as if 
-the field were specified with a single value, the `Date` header, in the list 
-of HTTP headers. Note that the list order is important, and MUST be specified in 
-the order the HTTP header field-value pairs are concatenated together 
+included when generating the signature for the message.  If specified, it
+should be a lowercased, quoted list of HTTP header fields, separated by a
+single space character. If not specified, implementations MUST operate as if
+the field were specified with a single value, the `Date` header, in the list
+of HTTP headers. Note that the list order is important, and MUST be specified in
+the order the HTTP header field-value pairs are concatenated together
 during signing.
      </t>
 
     </section>
-    
+
     <section anchor="signature" title="signature">
      <t>
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
-as described in <xref target="RFC4648">RFC 4648</xref>, 
+as described in <xref target="RFC4648">RFC 4648</xref>,
 <eref target="http://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
-The client uses the `algorithm` and `headers` signature parameters to form a 
-canonicalized `signing string`.  This `signing string` is then signed with the 
+The client uses the `algorithm` and `headers` signature parameters to form a
+canonicalized `signing string`.  This `signing string` is then signed with the
 key associated with `keyId` and the algorithm corresponding to `algorithm`.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
@@ -213,52 +215,52 @@ The `signature` parameter is then set to the base 64 encoding of the signature.
 
    <section anchor="ambiguity" title="Ambiguous Parameters">
     <t>
-If any of the parameters listed above are erroneously duplicated in the 
+If any of the parameters listed above are erroneously duplicated in the
 associated header field, then the last parameter defined MUST be used. Any
-parameter that is not recognized as a parameter, or is not well-formed, 
+parameter that is not recognized as a parameter, or is not well-formed,
 MUST be ignored.
     </t>
    </section>
-   
+
    <section anchor="canonicalization" title="Signature String Construction">
-   
+
    <t>
 In order to generate the string that is signed with a key, the client MUST use
-the values of each HTTP header field in the `headers` Signature parameter, 
-in the order they appear in the `headers` Signature parameter. It is out of 
-scope for this document to dictate what header fields 
-an application will want to enforce, but implementers SHOULD at minimum 
+the values of each HTTP header field in the `headers` Signature parameter,
+in the order they appear in the `headers` Signature parameter. It is out of
+scope for this document to dictate what header fields
+an application will want to enforce, but implementers SHOULD at minimum
 include the request target and Date header fields.
    </t>
    <t>
-To include the HTTP request target in the signature calculation, use the 
+To include the HTTP request target in the signature calculation, use the
 special `(request-target)` header field name.
     <list style="numbers">
      <t>
-If the header field name is `(request-target)` then generate the header field 
-value by concatenating the lowercased :method, an ASCII space, and 
+If the header field name is `(request-target)` then generate the header field
+value by concatenating the lowercased :method, an ASCII space, and
 the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
      </t>
      <t>
-Create the header field string by concatenating the lowercased header field 
-name followed with an ASCII colon `:`, an ASCII space ` `, and the header 
-field value. Leading and trailing optional whitespace (OWS) in the header field 
-value MUST be omitted (as specified in 
-<xref target="RFC7230">RFC7230</xref>, 
-<eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>). 
-If there are multiple instances of the same header field, all header field 
+Create the header field string by concatenating the lowercased header field
+name followed with an ASCII colon `:`, an ASCII space ` `, and the header
+field value. Leading and trailing optional whitespace (OWS) in the header field
+value MUST be omitted (as specified in
+<xref target="RFC7230">RFC7230</xref>,
+<eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>).
+If there are multiple instances of the same header field, all header field
 values associated with the header field MUST be concatenated, separated by a
-ASCII comma and an ASCII space `, `, and used in the order in which 
-they will appear in the transmitted HTTP message. Any other modification to 
-the header field value MUST NOT be made. 
+ASCII comma and an ASCII space `, `, and used in the order in which
+they will appear in the transmitted HTTP message. Any other modification to
+the header field value MUST NOT be made.
      </t>
      <t>
 If value is not the last value then append an ASCII newline `\n`.
      </t>
     </list>
    </t>
-   
+
    <t>
 To illustrate the rules specified above, assume a `headers` parameter list
 with the value of `(request-target) host date cache-control x-example` with
@@ -276,7 +278,7 @@ Cache-Control: must-revalidate
      </artwork>
     </figure>
    </t>
-   
+
    <t>
 For the HTTP request headers above, the corresponding signature string is:
 
@@ -290,16 +292,16 @@ x-example: Example header with some whitespace.
      </artwork>
     </figure>
    </t>
-   
+
   </section>
-  
+
   <section anchor="create" title="Creating a Signature">
 
    <t>
 In order to create a signature, a client MUST:
     <list style="numbers">
      <t>
-Use the contents of the HTTP message, the `headers` value, and the 
+Use the contents of the HTTP message, the `headers` value, and the
 Signature String Construction algorithm to create the signature string.
      </t>
      <t>
@@ -318,28 +320,28 @@ For example, assume that the `algorithm` value was "rsa-sha256". This would
 signal to the application that the data associated with `keyId` is an
 RSA Private Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
 signature string hashing function is SHA-256, and the signing
-algorithm is the one defined in <xref target="RFC3447">RFC 3447</xref>, 
+algorithm is the one defined in <xref target="RFC3447">RFC 3447</xref>,
 Section <eref target="http://tools.ietf.org/html/rfc3447#section-8.2.1">
-Section 8.2.1</eref>. The result of the signature creation algorithm 
+Section 8.2.1</eref>. The result of the signature creation algorithm
 specified in <xref target="RFC3447">RFC 3447</xref> should result in a
 binary string, which is then base 64 encoded and placed into the
 `signature` value.
    </t>
-  
-  </section>  
-  
+
+  </section>
+
   <section anchor="verify" title="Verifying a Signature">
 
    <t>
 In order to verify a signature, a server MUST:
     <list style="numbers">
      <t>
-Use the received HTTP message, the `headers` value, and the Signature String 
+Use the received HTTP message, the `headers` value, and the Signature String
 Construction algorithm to recreate the signature string.
      </t>
      <t>
-The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the 
-signature parameters are then used to verify the authenticity of the 
+The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the
+signature parameters are then used to verify the authenticity of the
 digital signature.
      </t>
     </list>
@@ -349,19 +351,19 @@ digital signature.
 For example, assume that the `algorithm` value was "rsa-sha256". This would
 signal to the application that the data associated with `keyId` is an
 RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
-signature string hashing function is SHA-256, and the `signature` 
+signature string hashing function is SHA-256, and the `signature`
 verification algorithm to use to verify the signature is the one defined in
-<xref target="RFC3447">RFC 3447</xref>, Section <eref 
+<xref target="RFC3447">RFC 3447</xref>, Section <eref
 target="http://tools.ietf.org/html/rfc3447#section-8.2.2">
-Section 8.2.2</eref>. The result of the signature verification algorithm 
+Section 8.2.2</eref>. The result of the signature verification algorithm
 specified in <xref target="RFC3447">RFC 3447</xref> should result in a
 successful verification unless the headers protected by the signature were
 tampered with in transit.
    </t>
-  
-  </section>  
+
+  </section>
  </section>
-  
+
  <section anchor="auth-scheme" title="The 'Signature' HTTP Authentication Scheme">
 
   <t>
@@ -372,16 +374,16 @@ is parameterized enough such that it is not bound to any particular key type or
 signing algorithm.  However, it does explicitly assume that clients can send an
 HTTP `Date` header.
   </t>
-  
+
   <section anchor="auth-header" title="Authorization Header">
 
    <t>
-The client is expected to send an Authorization header 
-(as defined in 
-<xref target="RFC7235">RFC 7235</xref>, <eref 
+The client is expected to send an Authorization header
+(as defined in
+<xref target="RFC7235">RFC 7235</xref>, <eref
 target="http://tools.ietf.org/html/draft-ietf-rfc7235-auth-25#section-4.1">
-Section 4.1</eref>) where the "auth-scheme" is "Signature" and the 
-"auth-param" parameters meet the requirements listed in 
+Section 4.1</eref>) where the "auth-scheme" is "Signature" and the
+"auth-param" parameters meet the requirements listed in
 Section 2: The Components of a Signature.
    </t>
 
@@ -401,15 +403,15 @@ Content-Length: 18
      </artwork>
     </figure>
    </t>
-   
+
    <t>
-Note that the use of the `Digest` header field is per 
-<xref target="RFC3230">RFC 3230</xref>, <eref 
+Note that the use of the `Digest` header field is per
+<xref target="RFC3230">RFC 3230</xref>, <eref
 target="http://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
-and is included merely as a demonstration of how an implementer could include 
+and is included merely as a demonstration of how an implementer could include
 information about the body of the message in the signature.
-The following sections also assume that the "rsa-key-1" keyId refers to a 
-private key known to the client and a public key known to the server. 
+The following sections also assume that the "rsa-key-1" keyId refers to a
+private key known to the client and a public key known to the server.
 The "hmac-key-1" keyId refers to key known to the client and server.
    </t>
 
@@ -435,9 +437,9 @@ WWW-Authenticate: Signature realm="Example",headers="(request-target) date"
     </figure>
     </t>
    </section>
-   
+
    <section anchor="auth-rsa-example" title="RSA Example">
-   
+
    <t>
 The authorization header and signature would be generated as:
     <figure>
@@ -447,7 +449,7 @@ headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
-   
+
    <t>
 The client would compose the signing string as:
     <figure>
@@ -458,7 +460,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18</artwork>
     </figure>
-Note that the '\n' symbols above are included to demonstrate where the new 
+Note that the '\n' symbols above are included to demonstrate where the new
 line character should be inserted. There is no new line on the final line of
 the signing string.
    </t>
@@ -474,11 +476,11 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
   </section>
-  
+
   <section anchor="auth-hmac-example" title="HMAC Example">
 
    <t>
-For an HMAC-based signature without a list of headers specified, the 
+For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
@@ -491,7 +493,7 @@ signature="Base64(HMAC-SHA256(signing string))"
 
    <t>
 The only difference between the RSA Example and the HMAC Example is the
-signature algorithm that is used. The client would compose the signing string 
+signature algorithm that is used. The client would compose the signing string
 in the same way as the RSA Example above:
     <figure>
      <artwork>
@@ -518,19 +520,19 @@ is parameterized enough such that it is not bound to any particular key type or
 signing algorithm.  However, it does explicitly assume that senders can send an
 HTTP `Date` header.
   </t>
-  
+
   <section anchor="sig-header" title="Signature Header">
 
    <t>
-The sender is expected to transmit a header 
-(as defined in 
-<xref target="RFC7230">RFC 7230</xref>, <eref 
+The sender is expected to transmit a header
+(as defined in
+<xref target="RFC7230">RFC 7230</xref>, <eref
 target="http://tools.ietf.org/html/rfc7230#section-3.2">
 Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
-contains one or more "auth-param"s (as defined in 
-<xref target="RFC7235">RFC 7235</xref>, <eref 
+contains one or more "auth-param"s (as defined in
+<xref target="RFC7235">RFC 7235</xref>, <eref
 target="http://tools.ietf.org/html/rfc7235#section-4.1">
-Section 4.1</eref>) where the "auth-param" parameters meet the requirements 
+Section 4.1</eref>) where the "auth-param" parameters meet the requirements
 listed in Section 2: The Components of a Signature.
    </t>
 
@@ -549,15 +551,15 @@ Content-Length: 18
 {"hello": "world"}</artwork>
     </figure>
    </t>
-   
+
    <t>
-The following sections assume that the "rsa-key-1" keyId refers to a 
-private key known to the client and a public key known to the server. 
+The following sections assume that the "rsa-key-1" keyId refers to a
+private key known to the client and a public key known to the server.
 The "hmac-key-1" keyId refers to key known to the client and server.
    </t>
-   
+
    <section anchor="sig-rsa-example" title="RSA Example">
-   
+
    <t>
 The signature header and signature would be generated as:
     <figure>
@@ -567,7 +569,7 @@ headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
-   
+
    <t>
 The client would compose the signing string as:
     <figure>
@@ -578,7 +580,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18</artwork>
     </figure>
-Note that the '\n' symbols above are included to demonstrate where the new 
+Note that the '\n' symbols above are included to demonstrate where the new
 line character should be inserted. There is no new line on the final line of
 the signing string.
    </t>
@@ -594,11 +596,11 @@ signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
   </section>
-  
+
   <section anchor="sig-hmac-example" title="HMAC Example">
 
    <t>
-For an HMAC-based signature without a list of headers specified, the 
+For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
@@ -610,7 +612,7 @@ signature="Base64(HMAC-SHA256(signing string))"</artwork>
 
    <t>
 The only difference between the RSA Example and the HMAC Example is the
-signature algorithm that is used. The client would compose the signing string 
+signature algorithm that is used. The client would compose the signing string
 in the same way as the RSA Example above:
     <figure>
      <artwork>
@@ -649,7 +651,7 @@ content-length: 18
   <t>
 There are a number of security considerations to take into account when implementing
 or utilizing this specification. A thorough security analysis of this protocol,
-including its strengths and weaknesses, can be found in 
+including its strengths and weaknesses, can be found in
 <eref target="https://web-payments.org/specs/source/http-signatures-audit/">
 Security Considerations for HTTP Signatures</eref>.
   </t>
@@ -659,32 +661,32 @@ Security Considerations for HTTP Signatures</eref>.
   <t>
 This specification was designed to be simple, modular, and extensible. There
 are a number of other specifications that build on this one. For
-example, the 
+example, the
 <eref target="https://web-payments.org/specs/source/http-signature-nonces/">HTTP Signature Nonces</eref>
 specification details how to
-use HTTP Signatures over a non-secured channel like HTTP and the 
+use HTTP Signatures over a non-secured channel like HTTP and the
 <eref target="https://web-payments.org/specs/source/http-signature-trailers/">HTTP Signature Trailers</eref>
 specification explains how to apply HTTP
 Signatures to streaming content. Developers that desire more functionality
 than this specification provides are urged to ensure that an extension
-specification doesn't already exist before implementing a proprietary 
+specification doesn't already exist before implementing a proprietary
 extension.
   </t>
 
   <t>
 If extensions to this specification are made by adding new Signature
 Parameters, those extension parameters MUST be registered in the
-Signature Authentication Scheme Registry. The registry will be created and 
-maintained at (the suggested URI) 
+Signature Authentication Scheme Registry. The registry will be created and
+maintained at (the suggested URI)
 <eref target="http://www.iana.org/assignments/http-auth-scheme-signature">
-http://www.iana.org/assignments/http-auth-scheme-signature</eref>. An 
+http://www.iana.org/assignments/http-auth-scheme-signature</eref>. An
 example entry in this registry is included below:
 
    <figure>
     <artwork>
 Signature Parameter: nonce
 Reference to specification: [HTTP_AUTH_SIGNATURE_NONCE], Section XYZ.
-Notes (optional): The HTTP Signature Nonces specification details 
+Notes (optional): The HTTP Signature Nonces specification details
 how to use HTTP Signatures over a unsecured channel like HTTP.
     </artwork>
    </figure>
@@ -693,7 +695,7 @@ how to use HTTP Signatures over a unsecured channel like HTTP.
 
  <section anchor="appendix-c" title="Test Values">
   <t>
-The following test data uses the following RSA 2048-bit keys, 
+The following test data uses the following RSA 2048-bit keys,
 which we will refer to as `keyId=Test` in the following samples:
 
    <figure>
@@ -753,7 +755,7 @@ signed by default. The string to sign would be:
 date: Thu, 05 Jan 2014 21:31:40 GMT</artwork>
    </figure>
    </t>
-   
+
    <t>
 The Authorization header would be:
     <figure>
@@ -789,7 +791,7 @@ date: Thu, 05 Jan 2014 21:31:40 GMT
     </artwork>
    </figure>
    </t>
-   
+
    <t>
 The Authorization header would be:
     <figure>
@@ -803,7 +805,7 @@ b7J5A6VB9J/4yVTRiBcxTypW/mpr5w="
    </figure>
    </t>
   </section>
-  
+
   <section anchor="all-headers-test" title="All Headers Test">
    <t>
 A strong signature including all of the headers and a digest of the body of
@@ -818,7 +820,7 @@ digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18</artwork>
     </figure>
    </t>
-   
+
    <t>
 The Authorization header would be:
     <figure>
@@ -830,7 +832,7 @@ nVrGR+30bmBgtpR39I4utq17s9ghz/2QFVxlnToYAvbSVZJ9ulLd1HQBugO0j
 Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
     </figure>
    </t>
-   
+
    <t>
 The Signature header would be:
     <figure>
@@ -847,8 +849,8 @@ Oyn9sXOtcN7uNHBjqNCqUsnt0sw/cJA6B6nJZpyNqNyAXKdxZZItOuhIs78w="</artwork>
  <section anchor="acknowledgements" title="Acknowledgements">
   <t>
 The editor would like to thank the following individuals for feedback on and
-implementations of the specification (in alphabetical order): Stephen Farrell, 
-Phillip Hallam-Baker, Dave Lehn, Dave Longley, James H. Manger, 
+implementations of the specification (in alphabetical order): Stephen Farrell,
+Phillip Hallam-Baker, Dave Lehn, Dave Longley, James H. Manger,
 Mark Nottingham, Yoav Nir, Julian Reschke, and Michael Richardson.
   </t>
  </section>
@@ -862,20 +864,20 @@ http://www.iana.org/assignments/http-authschemes</eref>
    <t>
 Authentication Scheme Name: Signature<vspace/>
 Reference: [RFC_THIS_DOCUMENT], Section 2.<vspace/>
-Notes (optional): The Signature scheme is designed for clients to 
-authenticate themselves with a server. 
+Notes (optional): The Signature scheme is designed for clients to
+authenticate themselves with a server.
    </t>
   </section>
   <section anchor="sa-registry" title="Signature Algorithm Registry">
    <t>
-The following initial entries should be added to the Signature Algorithm 
-Registry to be created and maintained at (the suggested URI) 
+The following initial entries should be added to the Signature Algorithm
+Registry to be created and maintained at (the suggested URI)
 <eref target="http://www.iana.org/assignments/signature-algorithms">
 http://www.iana.org/assignments/signature-algorithms</eref>:
    </t>
    <t>
-Editor's note: The references in this section are problematic as many of the 
-specifications that they refer to are too implementation specific, rather 
+Editor's note: The references in this section are problematic as many of the
+specifications that they refer to are too implementation specific, rather
 than just pointing to the proper signature and hashing specifications. A
 better approach might be just specifying the signature and hashing function
 specifications, leaving implementers to connect the dots (which are not that
