@@ -510,7 +510,8 @@ content-length: 18</artwork>
     </figure>
 Note that the '\n' symbols above are included to demonstrate where the new
 line character should be inserted. There is no new line on the final line of
-the signing string.
+the signing string. Each HTTP header above is displayed on a new line to provide
+better readability of the example.
    </t>
 
    <t>
@@ -630,7 +631,8 @@ content-length: 18</artwork>
     </figure>
 Note that the '\n' symbols above are included to demonstrate where the new
 line character should be inserted. There is no new line on the final line of
-the signing string.
+the signing string. Each HTTP header above is displayed on a new line to provide
+better readability of the example.
    </t>
 
    <t>
