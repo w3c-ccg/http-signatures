@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent"
-     docName="draft-cavage-http-signatures-07">
+     docName="draft-cavage-http-signatures-08">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -53,7 +53,7 @@
   </address>
  </author>
 
- <date month="July" year="2017" />
+ <date month="September" year="2017" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -74,7 +74,7 @@ message integrity to HTTP messages by using a digital signature.
 This specification is a joint work product of the
 <eref target="https://w3c-dvcg.github.io/">W3C Digital Verification Community Group</eref>
 and the
-<eref target="https://opencreds.org/">W3C Credentials Community Group</eref>.
+<eref target="https://w3c-ccg.github.io/">W3C Credentials Community Group</eref>.
 Feedback related to this specification should be sent to
 <eref target="mailto:public-credentials@w3.org">public-credentials@w3.org</eref>.
   </t>
