@@ -736,7 +736,7 @@ All examples use this request:
     <artwork>
 POST /foo?param=value&amp;pet=dog HTTP/1.1
 Host: example.com
-Date: Thu, 05 Jan 2014 21:31:40 GMT
+Date: Sun, 05 Jan 2014 21:31:40 GMT
 Content-Type: application/json
 Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
@@ -752,7 +752,7 @@ If a list of headers is not included, the date is the only header that is
 signed by default. The string to sign would be:
     <figure>
      <artwork>
-date: Thu, 05 Jan 2014 21:31:40 GMT</artwork>
+date: Sun, 05 Jan 2014 21:31:40 GMT</artwork>
    </figure>
    </t>
 
@@ -761,9 +761,9 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-signature="jKyvPcxB4JbmYY4mByyBY7cZfNl4OW9HpFQlG7N4YcJPteKTu4MW
-CLyk+gIr0wDgqtLWf9NLpMAMimdfsH7FSWGfbMFSrsVTHNTk0rK3usrfFnti1dx
-sM4jl0kYJCKTGI/UWkqiaxwNiKqGcdlEDrTcUhhsFsOIo8VhddmZTZ8w="</artwork>
+signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
+6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
+6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="</artwork>
    </figure>
    </t>
 
@@ -772,9 +772,9 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
-signature="jKyvPcxB4JbmYY4mByyBY7cZfNl4OW9HpFQlG7N4YcJPteKTu4MW
-CLyk+gIr0wDgqtLWf9NLpMAMimdfsH7FSWGfbMFSrsVTHNTk0rK3usrfFnti1dx
-sM4jl0kYJCKTGI/UWkqiaxwNiKqGcdlEDrTcUhhsFsOIo8VhddmZTZ8w="</artwork>
+signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
+6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
+6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="</artwork>
    </figure>
    </t>
   </section>
@@ -787,7 +787,7 @@ this case, the string to sign would be:
      <artwork>
 (request-target): post /foo?param=value&amp;pet=dog
 host: example.com
-date: Thu, 05 Jan 2014 21:31:40 GMT
+date: Sun, 05 Jan 2014 21:31:40 GMT
     </artwork>
    </figure>
    </t>
@@ -797,10 +797,10 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-headers="(request-target) host date", signature="HUxc9BS3P/kPhS
-mJo+0pQ4IsCo007vkv6bUm4Qehrx+B1Eo4Mq5/6KylET72ZpMUS80XvjlOPjKzx
-feTQj4DiKbAzwJAb4HX3qX6obQTa00/qPDXlMepD2JtTw33yNnm/0xV7fQuvILN
-/ys+378Ysi082+4xBQFwvhNvSoVsGv4="
+headers="(request-target) host date", signature="qdx+H7PHHDZgy4
+y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS2mg2+SbrQDMCJypxBLSPQR2aAjn
+7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3nndiv/x1xSHDJWeSWkx3ButlYSuBs
+kLu6kd9Fswtemr3lgdDEmn04swr2Os0="
     </artwork>
    </figure>
    </t>
@@ -814,7 +814,7 @@ the HTTP request would result in the following signing string:
      <artwork>
 (request-target): post /foo?param=value&amp;pet=dog
 host: example.com
-date: Thu, 05 Jan 2014 21:31:40 GMT
+date: Sun, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18</artwork>
@@ -827,9 +827,9 @@ The Authorization header would be:
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
 headers="(request-target) host date content-type digest content-length",
-signature="Ef7MlxLXoBovhil3AlyjtBwAL9g4TN3tibLj7uuNB3CROat/9Kae
-Q4hW2NiJ+pZ6HQEOx9vYZAyi+7cmIkmJszJCut5kQLAwuX+Ms/mUFvpKlSo9StS
-2bMXDBNjOh4Auj774GFj4gwjS+3NhFeoqyr/MuN6HsEnkvn6zdgfE2i0="</artwork>
+signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
+8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
+ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
     </figure>
    </t>
 
@@ -839,9 +839,9 @@ The Signature header would be:
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
 headers="(request-target) host date content-type digest content-length",
-signature="Ef7MlxLXoBovhil3AlyjtBwAL9g4TN3tibLj7uuNB3CROat/9Kae
-Q4hW2NiJ+pZ6HQEOx9vYZAyi+7cmIkmJszJCut5kQLAwuX+Ms/mUFvpKlSo9StS
-2bMXDBNjOh4Auj774GFj4gwjS+3NhFeoqyr/MuN6HsEnkvn6zdgfE2i0="</artwork>
+signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
+8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
+ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
     </figure>
    </t>
  </section>
