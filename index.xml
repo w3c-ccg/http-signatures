@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent"
-     docName="draft-cavage-http-signatures-09">
+     docName="draft-cavage-http-signatures-10">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -53,7 +53,7 @@
   </address>
  </author>
 
- <date month="November" year="2017" />
+ <date month="May" year="2018" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -241,6 +241,8 @@ If the header field name is `(request-target)` then generate the header field
 value by concatenating the lowercased :method, an ASCII space, and
 the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
+Note: For the avoidance of doubt, lowercasing only applies to the :method
+pseudo-header and not to the :path pseudo-header.
      </t>
      <t>
 Create the header field string by concatenating the lowercased header field
