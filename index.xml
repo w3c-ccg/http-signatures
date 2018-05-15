@@ -858,9 +858,28 @@ ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
  <section anchor="acknowledgements" title="Acknowledgements">
   <t>
 The editor would like to thank the following individuals for feedback on and
-implementations of the specification (in alphabetical order): Stephen Farrell,
-Phillip Hallam-Baker, Dave Lehn, Dave Longley, James H. Manger,
-Mark Nottingham, Yoav Nir, Julian Reschke, and Michael Richardson.
+implementations of the specification (in alphabetical order):
+Mark Adamcin,
+Mark Allen,
+Paul Annesley,
+Karl Böhlmark,
+Stephen Farrell,
+Phillip Hallam-Baker,
+Andrey Kislyuk,
+Adam Knight,
+Dave Lehn,
+Dave Longley,
+James H. Manger,
+Ilari Liusvaara,
+Mark Nottingham,
+Yoav Nir,
+Adrian Palmer,
+Lucas Pardue,
+Julian Reschke,
+Michael Richardson,
+Adam Scarr,
+and
+Dirk Stein.
   </t>
  </section>
  <section anchor="appendix-d" title="IANA Considerations">
