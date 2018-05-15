@@ -75,7 +75,9 @@ This specification is a joint work product of the
 <eref target="https://w3c-dvcg.github.io/">W3C Digital Verification Community Group</eref>
 and the
 <eref target="https://w3c-ccg.github.io/">W3C Credentials Community Group</eref>.
-Feedback related to this specification should be sent to
+Feedback related to this specification should logged in the
+<eref target="https://github.com/w3c-dvcg/http-signatures/issues">issue tracker</eref>
+or be sent to
 <eref target="mailto:public-credentials@w3.org">public-credentials@w3.org</eref>.
   </t>
  </note>
