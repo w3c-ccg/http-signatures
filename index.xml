@@ -173,15 +173,15 @@ of keys and assignment of `keyId` is out of scope for this document.
      </t>
     </section>
 
-    <section anchor="algorithm" title="algorithm">
-
+    <section anchor="signature" title="signature">
      <t>
-REQUIRED. The `algorithm` parameter is used to specify the digital signature
-algorithm to use when generating the signature. Valid values for this
-parameter can be found in the Signature Algorithms registry located at
-<eref target="http://www.iana.org/assignments/signature-algorithms">
-http://www.iana.org/assignments/signature-algorithms</eref> and MUST NOT be
-marked "deprecated".
+REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
+as described in <xref target="RFC4648">RFC 4648</xref>,
+<eref target="http://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
+The client uses the `algorithm` and `headers` signature parameters to form a
+canonicalized `signing string`.  This `signing string` is then signed with the
+key associated with `keyId` and the algorithm corresponding to `algorithm`.
+The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
 
@@ -200,17 +200,24 @@ during signing.
 
     </section>
 
-    <section anchor="signature" title="signature">
+    <section anchor="algorithm" title="algorithm">
+
      <t>
-REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
-as described in <xref target="RFC4648">RFC 4648</xref>,
-<eref target="http://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
-The client uses the `algorithm` and `headers` signature parameters to form a
-canonicalized `signing string`.  This `signing string` is then signed with the
-key associated with `keyId` and the algorithm corresponding to `algorithm`.
-The `signature` parameter is then set to the base 64 encoding of the signature.
+OPTIONAL. The `algorithm` parameter is used to specify the digital signature
+algorithm to use when generating the signature. Valid values for this
+parameter can be found in the Signature Algorithms registry located at
+<eref target="http://www.iana.org/assignments/signature-algorithms">
+http://www.iana.org/assignments/signature-algorithms</eref> and MUST NOT be
+marked "deprecated". It is preferred that the algorithm used by an
+implementation be derived from the key metadata identified by the `keyId`
+rather than from this field. If `algorithm` is provided and differs from
+the key metadata identified by the `keyId` then an implementation
+MUST produce an error. The `algorithm` parameter, which may be specified by
+an attacker, has the potential to create security vulnerabilities and
+will most likely be deprecated in the future.
      </t>
     </section>
+
    </section>
 
    <section anchor="ambiguity" title="Ambiguous Parameters">
