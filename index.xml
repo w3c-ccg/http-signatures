@@ -351,16 +351,18 @@ Construction algorithm to recreate the signature string.
      <t>
 The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the
 signature parameters are then used to verify the authenticity of the
-digital signature.
+digital signature. Note: The application verifying the signature MUST derive
+the `algorithm` from the metadata associated with the `keyId` and MUST NOT
+use the value of `algorithm` from the signed message.
      </t>
     </list>
    </t>
 
    <t>
 For example, assume that the `algorithm` value was "rsa-sha256". This would
-signal to the application that the data associated with `keyId` is an
-RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
-signature string hashing function is SHA-256, and the `signature`
+signal to the application that the metadata associated with `keyId` will
+express a RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
+a signature string hashing function of SHA-256, and the `signature`
 verification algorithm to use to verify the signature is the one defined in
 <xref target="RFC3447">RFC 3447</xref>, Section <eref
 target="http://tools.ietf.org/html/rfc3447#section-8.2.2">
