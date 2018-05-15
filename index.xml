@@ -207,9 +207,8 @@ during signing.
      <t>
 OPTIONAL. The `algorithm` parameter is used to specify the digital signature
 algorithm to use when generating the signature. Valid values for this
-parameter can be found in the Signature Algorithms registry located at
-<eref target="http://www.iana.org/assignments/signature-algorithms">
-http://www.iana.org/assignments/signature-algorithms</eref> and MUST NOT be
+parameter can be found in the
+<eref target="#sa-registry">Signature Algorithms Registry</eref> and MUST NOT be
 marked "deprecated". It is preferred that the algorithm used by an
 implementation be derived from the key metadata identified by the `keyId`
 rather than from this field. If `algorithm` is provided and differs from
@@ -900,7 +899,16 @@ Notes (optional): The Signature scheme is designed for clients to
 authenticate themselves with a server.
    </t>
   </section>
-  <section anchor="sa-registry" title="Signature Algorithm Registry">
+  <section anchor="sa-registry" title="Signature Algorithms Registry (Historical)">
+   <t>
+IMPORTANT:
+Older versions of this specification assumed the creation of a signature
+algorithm registry. The specification of signature algorithms via the
+`algorithm` property are expected to be deprecated in the near future
+due to security concerns. As such, this entire section only remains for
+historical purposes and is expected to be removed from the specification
+in its entirety before the finalization of this document.
+   </t>
    <t>
 The following initial entries should be added to the Signature Algorithm
 Registry to be created and maintained at (the suggested URI)
