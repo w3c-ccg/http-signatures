@@ -327,7 +327,7 @@ For the HTTP request headers above, the corresponding signature string is:
 host: example.org
 date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
-x-emptyheader: 
+x-emptyheader:
 x-example: Example header with some whitespace.
      </artwork>
     </figure>
@@ -376,7 +376,8 @@ binary string, which is then base 64 encoded and placed into the
 In order to verify a signature, a server MUST:
     <list style="numbers">
      <t>
-Use the received HTTP message, the `headers` value, and the
+Use the received HTTP message, the `headers` value
+(or the Date header if no `headers` value is supplied), and the
 <xref target="canonicalization">Signature String Construction</xref>
 algorithm to recreate the signature.
      </t>
@@ -410,6 +411,40 @@ tampered with in transit.
    </t>
 
   </section>
+
+  <section anchor="date-header" title="Date Header Usage">
+
+   <t>
+This specification makes use of the Date header in illustrations,
+in the default list of headers to sign where none is explicitly provided, and
+as a component the list of this specification's recommended
+minimum headers to include in the signature in an implementation.
+   </t>
+
+   <t>
+The meaning and construction of the Date header is the one defined in
+<xref target="RFC7231">RFC 7231</xref>, <eref
+target="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">
+Section 7.1.1.2</eref>.
+Note that the definition used defines the Date header as required in all
+responses, but optional in requests unless it will "convey useful information
+to the server".
+   </t>
+
+   <t>
+Where a signature incorporates the Date header in a request with
+the Authorization or Signature headers - by default or explicitly - it is
+assumed clients are capable of including a properly formatted Date
+representation in requests.
+   </t>
+
+   <t>
+The meaning and validation of the contents of the Date header are outside
+the scope of this specification.
+   </t>
+
+  </section>
+
  </section>
 
  <section anchor="auth-scheme" title="The 'Signature' HTTP Authentication Scheme">
@@ -684,6 +719,7 @@ content-length: 18
   &rfc4648;
   &rfc6376;
   &rfc7230;
+  &rfc7231;
   &rfc7235;
   &jwa;
  </references>
