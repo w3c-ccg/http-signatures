@@ -175,6 +175,23 @@ of keys and assignment of `keyId` is out of scope for this document.
      </t>
     </section>
 
+    <section anchor="date" title="date">
+     <t>
+REQUIRED.  The `date` field is an integer representing a Unix time. Represent the
+signature issuing timestamp. A signature generated after the current timestamp
+should not be processed.
+     </t>
+    </section>
+
+    <section anchor="expires" title="expires">
+     <t>
+REQUIRED.  The `expires` field is an integer representing a Unix time. Represents
+the signature end of validity. A signature expired after the current timestamp
+should not be processed.
+     </t>
+    </section>
+     
+     
     <section anchor="signature" title="signature">
      <t>
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
@@ -577,6 +594,7 @@ The signature header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
@@ -603,6 +621,7 @@ be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
@@ -617,6 +636,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="hmac-key-1",algorithm="hmac-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date digest content-length",
 signature="Base64(HMAC-SHA256(signing string))"</artwork>
     </figure>
@@ -784,6 +804,7 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
 6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
 6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="</artwork>
@@ -809,6 +830,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date", signature="qdx+H7PHHDZgy4
 y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS2mg2+SbrQDMCJypxBLSPQR2aAjn
 7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3nndiv/x1xSHDJWeSWkx3ButlYSuBs
@@ -838,6 +860,7 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date content-type digest content-length",
 signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
 8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
@@ -850,6 +873,7 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
+date=1402170695, expires=1402170699,
 headers="(request-target) host date content-type digest content-length",
 signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
 8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
