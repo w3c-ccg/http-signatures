@@ -417,8 +417,7 @@ tampered with in transit.
    <t>
 This specification makes use of the Date header in illustrations,
 in the default list of headers to sign where none is explicitly provided, and
-as a component the list of this specification's recommended
-minimum headers to include in the signature in an implementation.
+as a one of headers to include as a minimum in the signature in implementations.
    </t>
 
    <t>
@@ -427,15 +426,17 @@ The meaning and construction of the Date header is the one defined in
 target="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">
 Section 7.1.1.2</eref>.
 Note that the definition used defines the Date header as required in all
-responses, but optional in requests unless it will "convey useful information
-to the server".
+Responses, but OPTIONAL in Requests unless it will
+"convey useful information to the server".
    </t>
 
    <t>
-Where a signature incorporates the Date header in a request with
-the Authorization or Signature headers - by default or explicitly - it is
+Where a signature incorporates the Date header in a Request
+- by default or explicitly - it is
 assumed clients are capable of including a properly formatted Date
-representation in requests.
+representation in all Requests. It is therefore a requirement that all
+implementations are capable of including a Date header in Requests in
+addition to the standard inclusion in Responses.
    </t>
 
    <t>
