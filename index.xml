@@ -346,8 +346,9 @@ binary string, which is then base 64 encoded and placed into the
 In order to verify a signature, a server MUST:
     <list style="numbers">
      <t>
-Use the received HTTP message, the `headers` value, and the Signature String
-Construction algorithm to recreate the signature string.
+Use the received HTTP message, the `headers` value, and the
+<xref target="canonicalization">Signature String Construction</xref>
+algorithm to recreate the signature.
      </t>
      <t>
 The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the
@@ -357,6 +358,11 @@ the `algorithm` from the metadata associated with the `keyId` and MUST NOT
 use the value of `algorithm` from the signed message.
      </t>
     </list>
+   </t>
+   <t>
+If a header specified in the `headers` value of the signature parameters
+(or the default item `Date` where the `headers` value is not supplied)
+is absent from the message, the message MUST NOT be considered valid.
    </t>
 
    <t>
