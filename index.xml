@@ -187,17 +187,21 @@ of keys and assignment of `keyId` is out of scope for this document.
 
     <section anchor="date" title="date">
      <t>
-REQUIRED.  The `date` field is an integer representing a Unix time. Represent the
+RECOMMENDED.  The `date` field is an integer representing a Unix time. Represent the
 signature issuing timestamp. A signature generated after the current timestamp
-should not be processed.
+should not be processed. Using Unix timestamp avoids speeds up processing and
+avoid timezone management existing in RFC3339. Subsecod precision is allowed
+using float values.
      </t>
     </section>
 
     <section anchor="expires" title="expires">
      <t>
-REQUIRED.  The `expires` field is an integer representing a Unix time. Represents
+OPTIONAL.  The `expires` field is an integer representing a Unix time. Represents
 the signature end of validity. A signature expired after the current timestamp
-should not be processed.
+should not be processed. Using Unix timestamp avoids speeds up processing and
+avoid timezone management existing in RFC3339. Subsecod precision is allowed
+using float values.
      </t>
     </section>
      
