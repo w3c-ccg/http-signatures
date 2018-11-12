@@ -426,17 +426,17 @@ The meaning and construction of the Date header is the one defined in
 target="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">
 Section 7.1.1.2</eref>.
 Note that the definition used defines the Date header as required in all
-Responses, but OPTIONAL in Requests unless it will
+responses, but OPTIONAL in requests unless it will
 "convey useful information to the server".
    </t>
 
    <t>
-Where a signature incorporates the Date header in a Request
+Where a signature incorporates the Date header in a request
 - by default or explicitly - it is
 assumed clients are capable of including a properly formatted Date
-representation in all Requests. It is therefore a requirement that all
-implementations are capable of including a Date header in Requests in
-addition to the standard inclusion in Responses.
+representation in all requests. It is therefore a requirement that all
+implementations are capable of including a Date header in requests in
+addition to the standard inclusion in responses.
    </t>
 
    <t>
