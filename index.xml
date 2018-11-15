@@ -190,8 +190,8 @@ of keys and assignment of `keyId` is out of scope for this document.
 RECOMMENDED.  The `date` field is an integer representing a Unix time. Represent the
 signature issuing timestamp. A signature generated after the current timestamp
 should not be processed. Using Unix timestamp avoids speeds up processing and
-avoid timezone management existing in RFC3339. Subsecod precision is allowed
-using float values.
+avoid timezone management existing in RFC3339. Subsecond precision is allowed
+using decimal notation.
      </t>
     </section>
 
@@ -201,7 +201,7 @@ OPTIONAL.  The `expires` field is an integer representing a Unix time. Represent
 the signature end of validity. A signature expired after the current timestamp
 should not be processed. Using Unix timestamp avoids speeds up processing and
 avoid timezone management existing in RFC3339. Subsecod precision is allowed
-using float values.
+using decimal notation.
      </t>
     </section>
      
