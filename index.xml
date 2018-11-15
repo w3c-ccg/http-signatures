@@ -192,14 +192,24 @@ The `signature` parameter is then set to the base 64 encoding of the signature.
      <t>
 OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
 included when generating the signature for the message.  If specified, it
-should be a lowercased, quoted list of HTTP header fields, separated by a
+SHOULD be a lowercased, quoted list of HTTP header fields, separated by a
 single space character. If not specified, implementations MUST operate as if
-the field were specified with a single value, the `Date` header, in the list
-of HTTP headers. Note that the list order is important, and MUST be specified in
+the field were specified with a single value, `date`, in the list
+of HTTP headers. Note:
+        <list style="numbers">
+           <t>The list order is important, and MUST be specified in
 the order the HTTP header field-value pairs are concatenated together
-during signing.
+during <xref target="canonicalization">Signature String Construction</xref>
+used during signing and verifying.
+           </t>
+           <t>
+A `headers` parameter value without any headers MAY be provided,
+but since it results in a signature of an empty string it is of almost no
+utility and SHOULD NOT be used. This is distinct from not specifying
+a `headers` parameter at all.
+           </t>
+        </list>
      </t>
-
     </section>
 
     <section anchor="algorithm" title="algorithm">
@@ -259,11 +269,28 @@ field value. Leading and trailing optional whitespace (OWS) in the header field
 value MUST be omitted (as specified in
 <xref target="RFC7230">RFC7230</xref>,
 <eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>).
+       <list style="numbers">
+         <t>
 If there are multiple instances of the same header field, all header field
 values associated with the header field MUST be concatenated, separated by a
 ASCII comma and an ASCII space `, `, and used in the order in which
-they will appear in the transmitted HTTP message. Any other modification to
+they will appear in the transmitted HTTP message.
+         </t>
+         <t>
+If the header value (after removing leading and trailing whitepspace)
+is a zero-length string, the signature string line correlating with that header
+will simply be the (lowercased) header name, an ASCII colon `:`,
+and an ASCII space ` `.
+         </t>
+         <t>
+Any other modification to
 the header field value MUST NOT be made.
+         </t>
+         <t>
+If a header specified in the headers parameter is malformed or cannot be matched
+with a provided header in the message, the signer MUST NOT produce a signature.
+         </t>
+       </list>
      </t>
      <t>
 If value is not the last value then append an ASCII newline `\n`.
@@ -273,7 +300,8 @@ If value is not the last value then append an ASCII newline `\n`.
 
    <t>
 To illustrate the rules specified above, assume a `headers` parameter list
-with the value of `(request-target) host date cache-control x-example` with
+with the value of
+`(request-target) host date cache-control x-emptyheader x-example` with
 the following HTTP request headers:
 
     <figure>
@@ -283,6 +311,7 @@ Host: example.org
 Date: Tue, 07 Jun 2014 20:51:35 GMT
 X-Example: Example header
     with some whitespace.
+X-EmptyHeader:
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
      </artwork>
@@ -298,6 +327,7 @@ For the HTTP request headers above, the corresponding signature string is:
 host: example.org
 date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
+x-emptyheader: 
 x-example: Example header with some whitespace.
      </artwork>
     </figure>
@@ -368,8 +398,8 @@ is absent from the message, the message MUST NOT be considered valid.
    <t>
 For example, assume that the `algorithm` value was "rsa-sha256". This would
 signal to the application that the metadata associated with `keyId` will
-express a RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
-a signature string hashing function of SHA-256, and the `signature`
+express a RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>),
+the signature string hashing function of SHA-256, and the `signature`
 verification algorithm to use to verify the signature is the one defined in
 <xref target="RFC3447">RFC 3447</xref>, Section <eref
 target="http://tools.ietf.org/html/rfc3447#section-8.2.2">
