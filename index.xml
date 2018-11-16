@@ -159,7 +159,7 @@ the key being used to sign the content and the authorized entity) to
 verify that a message was signed by that entity.
    </t>
    <t>
-When optionally combined with keys in certificates issued
+When optionally combined with asymmetric keys in certificates issued
 via PKI, this specification can also enable authentication of a client and
 server with no prior knowledge of each other via a trusted CA issuing their
 respective certificates.
@@ -462,9 +462,12 @@ tampered with in transit.
  <section anchor="auth-scheme" title="The 'Signature' HTTP Authentication Scheme">
 
   <t>
-The "signature" authentication scheme is based on the model that the client must
+The "Signature" authentication scheme is based on the model that the client must
 authenticate itself with a digital signature produced by either a private
-asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
+asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).
+  </t>
+  <t>
+The scheme
 is parameterized enough such that it is not bound to any particular key type or
 signing algorithm.  However, it does explicitly assume that clients can send an
 HTTP `Date` header.
@@ -483,7 +486,7 @@ Section 2: The Components of a Signature.
    </t>
 
    <t>
-The rest if this section uses the following HTTP request as an example.
+The rest of this section uses the following HTTP request as an example.
 
     <figure>
      <artwork>
@@ -505,17 +508,18 @@ Note that the use of the `Digest` header field is per
 target="http://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
 and is included merely as a demonstration of how an implementer could include
 information about the body of the message in the signature.
-The following sections also assume that the "rsa-key-1" keyId refers to a
-private key known to the client and a public key known to the server.
-The "hmac-key-1" keyId refers to key known to the client and server.
+The following sections also assume that the "rsa-key-1" keyId asserted by the
+client is an identifier meaningful to the server.
    </t>
 
    <section anchor="auth-isa" title="Initiating Signature Authorization">
 
     <t>
-A server may notify a client when a protected resource could be accessed by
-authenticating itself to the server. To initiate this process, the server
-will request that the client authenticate itself via a 401 response code. The
+A server may notify a client when a resource is protected by requiring a signature,
+To initiate this process, the server
+will request that the client authenticate itself via a
+<eref target="https://tools.ietf.org/html/rfc7235#section-3.1">401 response
+</eref> code. The
 server may optionally specify which HTTP headers it expects to be signed
 by specifying the `headers` parameter in the WWW-Authenticate header.
 For example:
@@ -608,9 +612,18 @@ content-length: 18
  <section anchor="sig" title="The 'Signature' HTTP Header">
 
   <t>
-The "signature" HTTP Header is based on the model that the sender must
-authenticate itself with a digital signature produced by either a private
-asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
+The "Signature" HTTP Header allows the the sender to add a signature
+to a HTTP message (client request or server response) using either a private
+asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC), allowing 
+the receiver and/or any intermediate system to immediately or later
+verify the integrity of the message. When signed with a private key 
+it can also provide a measure of non-repudiation. The "Signature" scheme
+can also be used by (typically) a client for authentication similar
+to the purpose of the
+<xref target="auth-scheme">'Signature' HTTP Authentication Scheme</xref>
+  </t>
+  <t>
+The scheme
 is parameterized enough such that it is not bound to any particular key type or
 signing algorithm.  However, it does explicitly assume that senders can send an
 HTTP `Date` header.
@@ -648,9 +661,8 @@ Content-Length: 18
    </t>
 
    <t>
-The following sections assume that the "rsa-key-1" keyId refers to a
-private key known to the client and a public key known to the server.
-The "hmac-key-1" keyId refers to key known to the client and server.
+The following sections assume that the "rsa-key-1" keyId asserted by the
+client is an identifier meaningful to the server.
    </t>
 
    <section anchor="sig-rsa-example" title="RSA Example">
