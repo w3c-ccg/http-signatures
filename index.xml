@@ -719,8 +719,8 @@ Content-Length: 18
    </t>
 
    <t>
-The following sections assume that the "rsa-key-1" keyId asserted by the
-client is an identifier meaningful to the server.
+The following sections assume that the "rsa-key-1" keyId provided by the
+signer is an identifier meaningful to the server.
    </t>
 
    <section anchor="sig-rsa-example" title="RSA Example">
