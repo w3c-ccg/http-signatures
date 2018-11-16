@@ -113,38 +113,66 @@ are no techniques in this proposal that are novel beyond the previous art, it
 is useful to standardize a simple and cryptographically strong mechanism for
 digitally signing HTTP messages.
   </t>
+  <t>
+This specification presents two mechanisms with distinct purposes:
+    <list style="numbers">
+       <t>
+The "Signature" scheme which is intended primarily to allow a sender
+to assert the contents of the message sent are correct and have not been
+altered during transmission or storage in a way that alters the meaning expressed
+in the original message as signed. Any party reading the message (the verifier)
+may independently confirm the validity of the message signature. This scheme
+is agnostic to the client/server direction and can be used to verify the contents of
+either HTTP requests, HTTP reponses or both.
+       </t>
+       <t>
+The "Authorization" scheme which is intended primarily to allow a sender
+to assert an identity and request access to a resource or resources. This is
+typically used in authentication flows such as OAuth2, and as a consequence
+`Authorization` header is normally generated (and the message signed) by the
+HTTP client and the message verified by an HTTP service.
+       </t>
+     </list>
+  </t>
 
   <section anchor="intro-requests" title="Using Signatures in HTTP Requests">
    <t>
-It is common practice to protect sensitive website API functionality via
+It is common practice to protect sensitive website and API functionality via
 authentication mechanisms. Often, the entity accessing these APIs is a
 piece of automated software outside of an interactive human session. While
 there are mechanisms like OAuth and API secrets that are used to grant
 API access, each have their weaknesses such as unnecessary complexity
 for particular use cases or the use of shared secrets which may not be
-acceptable to an implementer.
+acceptable to an implementer. Shared secrets also prohibit any possibility
+for non-repudiation, while secure transports such as TLS do not provide
+for this at all.
    </t>
    <t>
-Digital signatures are widely used to provide authentication without
+Digital signatures are widely used to provide authentication and integrity
+assurances without
 the need for shared secrets. They also do not require a round-trip in
-order to authenticate the client. A server need only have a mapping between
-the key being used to sign the content and the authorized entity to
+order to authenticate the client, and allow the integrity of a message to
+be verified independently of the transport (e.g. TLS)
+A server need only have an understanding of the key (e.g. through
+a mapping between
+the key being used to sign the content and the authorized entity) to
 verify that a message was signed by that entity.
    </t>
    <t>
-This specification provides two mechanisms that can be used by a server
-to authenticate a client. The first is the 'Signature' HTTP Authentication
-Scheme, which may be used for interactive sessions. The second is the
-Signature HTTP Header, which is typically used by automated software
-agents.
+When optionally combined with keys in certificates issued
+via PKI, this specification can also enable authentication of a client and
+server with no prior knowledge of each other via a trusted CA issuing their
+respective certificates.
    </t>
   </section>
 
   <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
    <t>
-For high security transactions, having an additional signature on the HTTP
-header allows a client to ensure that even if the transport channel has been
-compromised, that the content of the messages have not been compromised.
+For high security transactions, having a mechanism to sign HTTP responses
+allows a client to ensure that even if the transport channel has been
+compromised or intermediates alter the message by adding, removing or
+altering headers (even for benign operational reasons) that the content and meaning
+of the message has not been compromised.
 This specification provides a HTTP Signature Header mechanism that can be
 used by a client to authenticate the sender of a message and ensure that
 particular headers have not been modified in transit.
@@ -157,7 +185,8 @@ particular headers have not been modified in transit.
   <t>
 There are a number of components in a signature that are common between the
 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header. This
-section details the components of a digital signature.
+section details the components of the digital signature paremeters common to
+both schemes.
   </t>
 
    <section anchor="params" title="Signature Parameters">
@@ -242,6 +271,24 @@ MUST be ignored.
 
    <section anchor="canonicalization" title="Signature String Construction">
 
+   <t>
+A signed HTTP message needs to be tolerant of some
+alterations during transmission
+as it goes through gateways, proxies and other entities. As such, the raw
+HTTP message transmitted by the signer, and the HTTP message received
+by the verifier may have undergone some changes, typically in the form of
+added, removed or altered headers. These changes are not normally under the
+control of the sender, and often the verifier. While these changes should not
+alter the meaning expressed by the sender this protocol allows for any sensitive
+or meaningful content changes to be detected by the verifier.
+   </t>
+   <t>
+As such, the signer cannot control which headers may appear in the message
+when it arrives at the verifier, and will explicitly indicate which headers were
+included in the signature via the `headers` signature parameter. The value of
+this parameter is used to construct the intermediate Signature String, which
+is the data that is actually signed.
+   </t>
    <t>
 In order to generate the string that is signed with a key, the client MUST use
 the values of each HTTP header field in the `headers` Signature parameter,
