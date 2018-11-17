@@ -123,14 +123,17 @@ altered during transmission or storage in a way that alters the meaning expresse
 in the original message as signed. Any party reading the message (the verifier)
 may independently confirm the validity of the message signature. This scheme
 is agnostic to the client/server direction and can be used to verify the contents of
-either HTTP requests, HTTP reponses or both.
+either HTTP requests, HTTP reponses, or both.
        </t>
        <t>
 The "Authorization" scheme which is intended primarily to allow a sender
-to assert an identity and request access to a resource or resources. This is
-typically used in authentication flows such as OAuth2, and as a consequence
-`Authorization` header is normally generated (and the message signed) by the
-HTTP client and the message verified by an HTTP service.
+to request access to a resource or resources by proving their identity. This
+specification allows for this both with a shared secret (using HMAC) or with
+public/private keys. The "Authorization" scheme is
+typically used in authentication processes and not directly for message signing.
+As a consequence `Authorization` header is normally generated
+(and the message signed) by the HTTP client and the message verified by
+the HTTP server.
        </t>
      </list>
   </t>
@@ -152,7 +155,7 @@ Digital signatures are widely used to provide authentication and integrity
 assurances without
 the need for shared secrets. They also do not require a round-trip in
 order to authenticate the client, and allow the integrity of a message to
-be verified independently of the transport (e.g. TLS)
+be verified independently of the transport (e.g. TLS).
 A server need only have an understanding of the key (e.g. through
 a mapping between
 the key being used to sign the content and the authorized entity) to
@@ -274,7 +277,7 @@ MUST be ignored.
    <t>
 A signed HTTP message needs to be tolerant of some
 alterations during transmission
-as it goes through gateways, proxies and other entities. As such, the raw
+as it goes through gateways, proxies, and other entities. As such, the raw
 HTTP message transmitted by the signer, and the HTTP message received
 by the verifier may have undergone some changes, typically in the form of
 added, removed or altered headers. These changes are not normally under the
