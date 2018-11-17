@@ -314,22 +314,19 @@ MUST be ignored.
    <section anchor="canonicalization" title="Signature String Construction">
 
    <t>
-A signed HTTP message needs to be tolerant of some
+A signed HTTP message needs to be tolerant of some trivial
 alterations during transmission
-as it goes through gateways, proxies, and other entities. As such, the raw
-HTTP message transmitted by the signer, and the HTTP message received
-by the verifier may have undergone some changes, typically in the form of
-added, removed or altered headers. These changes are not normally under the
-control of the sender, and often the verifier. While these changes should not
-alter the meaning expressed by the sender this protocol allows for any sensitive
-or meaningful content changes to be detected by the verifier.
+as it goes through gateways, proxies, and other entities. These changes are often
+of little consequence and very benign, but also often not visible to or
+detectable by either the sender or the recipient. Simply signing the entire
+message that was transmitted by the sender is therefore not feasible:
+Even very minor changes would result in a signature which cannot be verified.
    </t>
    <t>
-As such, the signer cannot control which headers may appear in the message
-when it arrives at the verifier, and will explicitly indicate which headers were
-included in the signature via the `headers` signature parameter. The value of
-this parameter is used to construct the intermediate Signature String, which
-is the data that is actually signed.
+This specification allows the sender to select which headers are meaningful
+by including their names the `headers` signature parameter. The headers
+appearing in this parameter are then used to construct the intermediate
+Signature String, which is the data that is actually signed.
    </t>
    <t>
 In order to generate the string that is signed with a key, the client MUST use
@@ -676,17 +673,22 @@ content-length: 18
  <section anchor="sig" title="The 'Signature' HTTP Header">
 
   <t>
-The "Signature" HTTP Header allows the the sender to add a signature
-to a HTTP message (client request or server response) using either a private
-asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC), allowing 
-the receiver and/or any intermediate system to immediately or later
-verify the integrity of the message. When signed with a private key 
-it can also provide a measure of non-repudiation. The "Signature" scheme
-can also be used by (typically) a client for authentication similar
-to the purpose of the
-<xref target="auth-scheme">'Signature' HTTP Authentication Scheme</xref>
+The "Signature" HTTP Header provides a mechanism to link the headers of a
+message (client request or server response) to a digital signature. By
+including the "Digest" header with a properly formatted digest,
+the message body can also be linked to the signature. The
+signature is generated and verified either using a shared secret (e.g. HMAC)
+or public/private keys (e.g. RSA, EC). This allows the receiver and/or any
+intermediate system to immediately or later verify the integrity of the
+message. When the signature is generated with a private key it can also
+provide a measure of non-repudiation, though a full implementation of a
+non-repudiatable statement is beyond the scope of this specification and
+highly dependent on implementation.
   </t>
   <t>
+The "Signature" scheme can also be
+used for authentication similar to the purpose of the
+<xref target="auth-scheme">'Signature' HTTP Authentication Scheme</xref>.
 The scheme
 is parameterized enough such that it is not bound to any particular key type or
 signing algorithm.
