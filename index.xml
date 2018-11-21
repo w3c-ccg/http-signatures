@@ -580,7 +580,7 @@ target="https://tools.ietf.org/html/rfc7230#section-3.2">
 Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
 contains one or more "auth-param"s (as defined in
 <xref target="RFC7235">RFC 7235</xref>, <eref
-target="https://tools.ietf.org/html/rfc7235#section-4.1">
+target="https://tools.ietf.org/html/rfc7235#section-2.1">
 Section 4.1</eref>) where the "auth-param" parameters meet the requirements
 listed in Section 2.1: Signature Parameters. Each instance of "auth-param"
 is separated by an ASCII comma.
