@@ -162,10 +162,9 @@ the key being used to sign the content and the authorized entity) to
 verify that a message was signed by that entity.
    </t>
    <t>
-When optionally combined with asymmetric keys in certificates issued
-via PKI, this specification can also enable authentication of a client and
-server with no prior knowledge of each other via a trusted CA issuing their
-respective certificates.
+When optionally combined with asymmetric keys associated with an
+identity, this specification can also enable authentication of a client and
+server with or without no prior knowledge of each other.
    </t>
   </section>
 
