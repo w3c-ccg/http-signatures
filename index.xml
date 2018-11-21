@@ -432,7 +432,8 @@ The client is expected to send an Authorization header
 target="https://tools.ietf.org/html/rfc7235#section-2.1">
 Section 4.1</eref>) where the "auth-scheme" is "Signature" and the
 "auth-param" parameters meet the requirements listed in
-Section 2: The Components of a Signature.
+Section 2.1: Signature Parameters. Each instance of "auth-param"
+is separated by an ASCII comma.
    </t>
 
    <t>
@@ -581,7 +582,8 @@ contains one or more "auth-param"s (as defined in
 <xref target="RFC7235">RFC 7235</xref>, <eref
 target="https://tools.ietf.org/html/rfc7235#section-4.1">
 Section 4.1</eref>) where the "auth-param" parameters meet the requirements
-listed in Section 2: The Components of a Signature.
+listed in Section 2.1: Signature Parameters. Each instance of "auth-param"
+is separated by an ASCII comma.
    </t>
 
    <t>
