@@ -164,7 +164,7 @@ verify that a message was signed by that entity.
    <t>
 When optionally combined with asymmetric keys associated with an
 identity, this specification can also enable authentication of a client and
-server with or without no prior knowledge of each other.
+server with or without prior knowledge of each other.
    </t>
   </section>
 
@@ -286,7 +286,7 @@ Even very minor changes would result in a signature which cannot be verified.
    </t>
    <t>
 This specification allows the sender to select which headers are meaningful
-by including their names the `headers` signature parameter. The headers
+by including their names in the `headers` signature parameter. The headers
 appearing in this parameter are then used to construct the intermediate
 Signature String, which is the data that is actually signed.
    </t>
@@ -516,7 +516,7 @@ client is an identifier meaningful to the server.
    <section anchor="auth-isa" title="Initiating Signature Authorization">
 
     <t>
-A server may notify a client when a resource is protected by requiring a signature,
+A server may notify a client when a resource is protected by requiring a signature.
 To initiate this process, the server
 will request that the client authenticate itself via a
 <eref target="https://tools.ietf.org/html/rfc7235#section-3.1">401 response
