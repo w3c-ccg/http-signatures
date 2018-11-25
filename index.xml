@@ -9,6 +9,7 @@
   <!ENTITY rfc6376 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6376.xml">
   <!ENTITY rfc6749 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY rfc7230 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
+  <!ENTITY rfc7231 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml">
   <!ENTITY rfc7235 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml">
   <!ENTITY jwa SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
