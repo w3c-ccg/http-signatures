@@ -364,6 +364,26 @@ x-example: Example header with some whitespace.
     </figure>
    </t>
 
+        <t>
+If you want to add an optiona date or expires to the signature, you
+can use the `(date)` and the `(expire)` special headers. In this case, the signature
+should include them:
+
+    <figure>
+     <artwork>
+(request-target): get /foo
+(date): 1402170695
+(expires): 1402170697
+host: example.org
+date: Tue, 07 Jun 2014 20:51:35 GMT
+cache-control: max-age=60, must-revalidate
+x-example: Example header with some whitespace.
+     </artwork>
+    </figure>
+   </t>
+
+
+     
   </section>
 
   <section anchor="create" title="Creating a Signature">
