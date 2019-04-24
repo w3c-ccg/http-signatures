@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc symrefs="yes" ?>
 <rfc category="std" ipr="trust200902" submissionType="independent"
-     docName="draft-cavage-http-signatures-10">
+     docName="draft-cavage-http-signatures-11">
 <front>
  <title>Signing HTTP Messages</title>
 
@@ -53,7 +53,7 @@
   </address>
  </author>
 
- <date month="May" year="2018" />
+ <date month="April" year="2019" />
  <area>Security</area>
  <workgroup></workgroup>
  <keyword>HTTP</keyword>
@@ -70,6 +70,16 @@ message integrity to HTTP messages by using a digital signature.
   </t>
  </abstract>
  <note title="Feedback">
+  <t>
+This version (draft-cavage-http-signatures-11) is experimental and implementers
+should be aware that a number of new features have been introduced in
+this version that change previous algorithms in subtle but important ways.
+The new features are designed to be fully backwards compatible. Older features
+have been deprecated, but are still supported in the algorithms described by
+this specification. There are no plans to remove deprecated features from
+the specification to ensure backwards compatability for implementations dating
+back to 2013.
+  </t>
   <t>
 This specification is a joint work product of the
 <eref target="https://w3c-dvcg.github.io/">W3C Digital Verification Community Group</eref>
@@ -327,7 +337,7 @@ For the HTTP request headers above, the corresponding signature string is:
 host: example.org
 date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
-x-emptyheader: 
+x-emptyheader:
 x-example: Example header with some whitespace.
      </artwork>
     </figure>
