@@ -185,27 +185,6 @@ of keys and assignment of `keyId` is out of scope for this document.
      </t>
     </section>
 
-    <section anchor="date" title="date">
-     <t>
-RECOMMENDED.  The `date` field is an integer representing a Unix time. Represent the
-signature issuing timestamp. A signature generated after the current timestamp
-should not be processed. Using Unix timestamp avoids speeds up processing and
-avoid timezone management existing in RFC3339. Subsecond precision is allowed
-using decimal notation.
-     </t>
-    </section>
-
-    <section anchor="expires" title="expires">
-     <t>
-OPTIONAL.  The `expires` field is an integer representing a Unix time. Represents
-the signature end of validity. A signature expired after the current timestamp
-should not be processed. Using Unix timestamp avoids speeds up processing and
-avoid timezone management existing in RFC3339. Subsecod precision is allowed
-using decimal notation.
-     </t>
-    </section>
-     
-     
     <section anchor="signature" title="signature">
      <t>
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
@@ -218,6 +197,46 @@ The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
 
+    <section anchor="algorithm" title="algorithm">
+
+     <t>
+RECOMMENDED. The `algorithm` parameter is used to specify the signature
+string construction mechanism. Valid values for this parameter can be found in
+the <eref target="#sa-registry">Signature Algorithms Registry</eref> and MUST
+NOT be marked "deprecated". Implementers SHOULD derive the digital signature
+algorithm used by an implementation from the key metadata identified by the
+`keyId` rather than from this field. If `algorithm` is provided and differs from
+the key metadata identified by the `keyId`, for example `rsa-sha256` but an
+EdDSA key is identified via `keyId`, then an implementation MUST produce an
+error. Implementers should note that previous versions of the
+`algorithm` parameter did not use the key information to derive the digital
+signature type and thus could be utilized by attackers to create security
+vulnerabilities.
+     </t>
+    </section>
+
+    <section anchor="created" title="created">
+     <t>
+RECOMMENDED.  The `created` field expresses when the signature was created.
+The value MUST be a Unix timestamp integer value. A signature with a `created`
+timestamp value that is in the future MUST NOT be processed. Using a Unix
+timestamp simplifies processing and avoids timezone management required by
+specifications such as RFC3339. Subsecond precision is not supported. This
+value is useful when clients are not capable of controlling the `Date` HTTP
+Header such as when operating in certain web browser environments.
+     </t>
+    </section>
+
+    <section anchor="expires" title="expires">
+     <t>
+OPTIONAL.  The `expires` field expresses when the signature ceases to be valid.
+The value MUST be a Unix timestamp integer value. A signatures with a
+`expires` timestamp value that is in the past MUST NOT be processed. Using
+a Unix timestamp simplifies processing and avoid timezone management existing
+in RFC3339. Subsecod precision is allowed using decimal notation.
+     </t>
+    </section>
+
     <section anchor="headers" title="headers">
 
      <t>
@@ -225,7 +244,7 @@ OPTIONAL.  The `headers` parameter is used to specify the list of HTTP headers
 included when generating the signature for the message.  If specified, it
 SHOULD be a lowercased, quoted list of HTTP header fields, separated by a
 single space character. If not specified, implementations MUST operate as if
-the field were specified with a single value, `date`, in the list
+the field were specified with a single value, `(created)`, in the list
 of HTTP headers. Note:
         <list style="numbers">
            <t>The list order is important, and MUST be specified in
@@ -240,23 +259,6 @@ utility and SHOULD NOT be used. This is distinct from not specifying
 a `headers` parameter at all.
            </t>
         </list>
-     </t>
-    </section>
-
-    <section anchor="algorithm" title="algorithm">
-
-     <t>
-OPTIONAL. The `algorithm` parameter is used to specify the digital signature
-algorithm to use when generating the signature. Valid values for this
-parameter can be found in the
-<eref target="#sa-registry">Signature Algorithms Registry</eref> and MUST NOT be
-marked "deprecated". It is preferred that the algorithm used by an
-implementation be derived from the key metadata identified by the `keyId`
-rather than from this field. If `algorithm` is provided and differs from
-the key metadata identified by the `keyId` then an implementation
-MUST produce an error. The `algorithm` parameter, which may be specified by
-an attacker, has the potential to create security vulnerabilities and
-will most likely be deprecated in the future.
      </t>
     </section>
 
@@ -279,11 +281,13 @@ the values of each HTTP header field in the `headers` Signature parameter,
 in the order they appear in the `headers` Signature parameter. It is out of
 scope for this document to dictate what header fields
 an application will want to enforce, but implementers SHOULD at minimum
-include the request target and Date header fields.
+include the (request-target) and (created) header fields.
    </t>
    <t>
 To include the HTTP request target in the signature calculation, use the
-special `(request-target)` header field name.
+special `(request-target)` header field name. To include the signature
+creation time, use the special `(created)` header field name. To include
+the signature expiration time, use the special `(expires)` header field name.
     <list style="numbers">
      <t>
 If the header field name is `(request-target)` then generate the header field
@@ -292,6 +296,22 @@ the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
 Note: For the avoidance of doubt, lowercasing only applies to the :method
 pseudo-header and not to the :path pseudo-header.
+     </t>
+     <t>
+If the header field name is `(created)` and the `algorithm`
+parameter starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST
+produce an error. If the `created` Signature parameter is not specified, or
+is not an integer, an implementation MUST produce an error. Otherwise, the
+header field value is the integer expressed by the `created` signature
+parameter.
+     </t>
+     <t>
+If the header field name is `(expires)` and the `algorithm`
+parameter starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST
+produce an error. If the `expires` Signature parameter is not specified, or
+is not an integer, an implementation MUST produce an error. Otherwise, the
+header field value is the integer expressed by the `created` signature
+parameter.
      </t>
      <t>
 Create the header field string by concatenating the lowercased header field
@@ -319,7 +339,7 @@ the header field value MUST NOT be made.
          </t>
          <t>
 If a header specified in the headers parameter is malformed or cannot be matched
-with a provided header in the message, the signer MUST NOT produce a signature.
+with a provided header in the message, the implementation MUST produce an error.
          </t>
        </list>
      </t>
@@ -331,9 +351,8 @@ If value is not the last value then append an ASCII newline `\n`.
 
    <t>
 To illustrate the rules specified above, assume a `headers` parameter list
-with the value of
-`(request-target) host date cache-control x-emptyheader x-example` with
-the following HTTP request headers:
+with the value of `(request-target) (created) (expires) host date cache-control
+x-emptyheader x-example` with the following HTTP request headers:
 
     <figure>
      <artwork>
@@ -355,6 +374,8 @@ For the HTTP request headers above, the corresponding signature string is:
     <figure>
      <artwork>
 (request-target): get /foo
+(created): 1402170695
+(expires): 1402170995
 host: example.org
 date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
@@ -364,26 +385,6 @@ x-example: Example header with some whitespace.
     </figure>
    </t>
 
-        <t>
-If you want to add an optiona date or expires to the signature, you
-can use the `(date)` and the `(expire)` special headers. In this case, the signature
-should include them:
-
-    <figure>
-     <artwork>
-(request-target): get /foo
-(date): 1402170695
-(expires): 1402170697
-host: example.org
-date: Tue, 07 Jun 2014 20:51:35 GMT
-cache-control: max-age=60, must-revalidate
-x-example: Example header with some whitespace.
-     </artwork>
-    </figure>
-   </t>
-
-
-     
   </section>
 
   <section anchor="create" title="Creating a Signature">
@@ -392,12 +393,12 @@ x-example: Example header with some whitespace.
 In order to create a signature, a client MUST:
     <list style="numbers">
      <t>
-Use the contents of the HTTP message, the `headers` value, and the
-Signature String Construction algorithm to create the signature string.
+Use the `headers` and `algorithm` values as well as the contents of the HTTP
+message, to create the signature string.
      </t>
      <t>
-The `algorithm` and key associated with `keyId` must then be used to
-generate a digital signature on the signature string.
+Use the key associated with `keyId` to generate a digital signature on the
+signature string.
      </t>
      <t>
 The `signature` is then generated by base 64 encoding the output of the
@@ -442,7 +443,7 @@ use the value of `algorithm` from the signed message.
    </t>
    <t>
 If a header specified in the `headers` value of the signature parameters
-(or the default item `Date` where the `headers` value is not supplied)
+(or the default item `(created)` where the `headers` value is not supplied)
 is absent from the message, the message MUST NOT be considered valid.
    </t>
 
@@ -470,8 +471,7 @@ The "signature" authentication scheme is based on the model that the client must
 authenticate itself with a digital signature produced by either a private
 asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
 is parameterized enough such that it is not bound to any particular key type or
-signing algorithm.  However, it does explicitly assume that clients can send an
-HTTP `Date` header.
+signing algorithm.
   </t>
 
   <section anchor="auth-header" title="Authorization Header">
@@ -617,8 +617,7 @@ The "signature" HTTP Header is based on the model that the sender must
 authenticate itself with a digital signature produced by either a private
 asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).  The scheme
 is parameterized enough such that it is not bound to any particular key type or
-signing algorithm.  However, it does explicitly assume that senders can send an
-HTTP `Date` header.
+signing algorithm.
   </t>
 
   <section anchor="sig-header" title="Signature Header">
