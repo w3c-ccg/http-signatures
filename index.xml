@@ -81,7 +81,7 @@ This version (draft-cavage-http-signatures-11) is experimental and implementers
 should be aware that a number of new features have been introduced in
 this version that change previous algorithms in subtle but important ways.
 Namely, there is now a backwards-compatible way to modify the signature
-string construction algorithm, as well as two new signature parameters to
+string construction algorithm, as well as two new Signature Parameters to
 enable web browser-based clients to include a signature creation and expiration
 timestamp. The new features are designed to be fully backwards compatible.
 Older features have been deprecated, but are still supported in the algorithms
@@ -216,7 +216,7 @@ both schemes.
    <section anchor="params" title="Signature Parameters">
 
     <t>
-The following section details the signature parameters.
+The following section details the Signature Parameters.
     </t>
 
     <section anchor="keyId" title="keyId">
@@ -236,7 +236,7 @@ employ when creating or verifying signatures.
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
 as described in <xref target="RFC4648">RFC 4648</xref>,
 <eref target="https://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
-The client uses the `algorithm` and `headers` signature parameters to form a
+The client uses the `algorithm` and `headers` Signature Parameters to form a
 canonicalized `signing string`.  This `signing string` is then signed with the
 key associated with `keyId` and the algorithm corresponding to `algorithm`.
 The `signature` parameter is then set to the base 64 encoding of the signature.
@@ -332,17 +332,19 @@ Even very minor changes would result in a signature which cannot be verified.
    </t>
    <t>
 This specification allows the sender to select which headers are meaningful
-by including their names in the `headers` signature parameter. The headers
+by including their names in the `headers` Signature Parameter. The headers
 appearing in this parameter are then used to construct the intermediate
 Signature String, which is the data that is actually signed.
    </t>
    <t>
 In order to generate the string that is signed with a key, the client MUST use
-the values of each HTTP header field in the `headers` Signature parameter,
-in the order they appear in the `headers` Signature parameter. It is out of
+the values of each HTTP header field in the `headers` Signature Parameter,
+in the order they appear in the `headers` Signature Parameter. It is out of
 scope for this document to dictate what header fields
 an application will want to enforce, but implementers SHOULD at minimum
-include the (request-target) and (created) header fields.
+include the `(request-target)` and `(created)` header fields if `algorithm` does
+not start with `rsa`, `hmac`, or `ecdsa`. Otherwise, `(request-target)` and
+`date` SHOULD be included in the signature.
    </t>
    <t>
 To include the HTTP request target in the signature calculation, use the
@@ -361,7 +363,7 @@ pseudo-header and not to the :path pseudo-header.
      <t>
 If the header field name is `(created)` and the `algorithm`
 parameter starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST
-produce an error. If the `created` Signature parameter is not specified, or
+produce an error. If the `created` Signature Parameter is not specified, or
 is not an integer, an implementation MUST produce an error. Otherwise, the
 header field value is the integer expressed by the `created` signature
 parameter.
@@ -369,7 +371,7 @@ parameter.
      <t>
 If the header field name is `(expires)` and the `algorithm`
 parameter starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST
-produce an error. If the `expires` Signature parameter is not specified, or
+produce an error. If the `expires` Signature Parameter is not specified, or
 is not an integer, an implementation MUST produce an error. Otherwise, the
 header field value is the integer expressed by the `created` signature
 parameter.
@@ -496,7 +498,7 @@ algorithm to recreate the signature.
      </t>
      <t>
 The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the
-signature parameters are then used to verify the authenticity of the
+Signature Parameters are then used to verify the authenticity of the
 digital signature. Note: The application verifying the signature MUST derive
 the digital signature algorithm from the metadata associated with the
 `keyId` and MUST NOT use the value of `algorithm` from the signed message.
@@ -504,7 +506,7 @@ the digital signature algorithm from the metadata associated with the
     </list>
    </t>
    <t>
-If a header specified in the `headers` value of the signature parameters
+If a header specified in the `headers` value of the Signature Parameters
 (or the default item `(created)` where the `headers` value is not supplied)
 is absent from the message, the implementation MUST produce an error.
    </t>
@@ -612,8 +614,8 @@ The authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
-headers="(request-target) (created) host digest content-length",
-signature="Base64(RSA-SHA512(signing string))"</artwork>
+  headers="(request-target) (created) host digest content-length",
+  signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
 
@@ -745,9 +747,10 @@ The signature header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="hs2019",
-created=1402170695, expires=1402170995,
-headers="(request-target) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"</artwork>
+  created=1402170695, expires=1402170995,
+  headers="(request-target) (created) (expires)
+    host date digest content-length",
+  signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
 
