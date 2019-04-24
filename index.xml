@@ -75,6 +75,7 @@ message integrity to HTTP messages by using a digital signature.
  <note title="Feedback">
   <t>
 WARNING: DO NOT IMPLEMENT THIS SPECIFICATION AND PUSH THE CODE INTO PRODUCTION.
+THIS VERSION OF THE SPECIFICATION IS ONLY FOR EXPERIMENTAL IMPLEMENTATIONS.
   </t>
   <t>
 This version (draft-cavage-http-signatures-11) is experimental and implementers
@@ -88,7 +89,7 @@ Older features have been deprecated, but are still supported in the algorithms
 described by this specification. There are no plans to remove deprecated
 features from the specification to ensure backwards compatability for
 implementations dating back to 2013. Test vectors still need to be added
-for the new algorithms and digital signature types such as EdDSA25519.
+for the new algorithms and digital signature types such as Ed25519.
   </t>
   <t>
 This specification is a joint work product of the
@@ -147,9 +148,9 @@ either HTTP requests, HTTP reponses, or both.
        </t>
        <t>
 The "Authorization" scheme which is intended primarily to allow a sender
-to request access to a resource or resources by proving their identity. This
-specification allows for this both with a shared secret (using HMAC) or with
-public/private keys. The "Authorization" scheme is
+to request access to a resource or resources by proving that they control a
+secret key. This specification allows for this both with a shared secret
+(using HMAC) or with public/private keys. The "Authorization" scheme is
 typically used in authentication processes and not directly for message signing.
 As a consequence `Authorization` header is normally generated
 (and the message signed) by the HTTP client and the message verified by
