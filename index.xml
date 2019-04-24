@@ -72,14 +72,21 @@ message integrity to HTTP messages by using a digital signature.
  </abstract>
  <note title="Feedback">
   <t>
+WARNING: DO NOT IMPLEMENT THIS SPECIFICATION AND PUSH THE CODE INTO PRODUCTION.
+  </t>
+  <t>
 This version (draft-cavage-http-signatures-11) is experimental and implementers
 should be aware that a number of new features have been introduced in
 this version that change previous algorithms in subtle but important ways.
-The new features are designed to be fully backwards compatible. Older features
-have been deprecated, but are still supported in the algorithms described by
-this specification. There are no plans to remove deprecated features from
-the specification to ensure backwards compatability for implementations dating
-back to 2013.
+Namely, there is now a backwards-compatible way to modify the signature
+string construction algorithm, as well as two new signature parameters to
+enable web browser-based clients to include a signature creation and expiration
+timestamp. The new features are designed to be fully backwards compatible.
+Older features have been deprecated, but are still supported in the algorithms
+described by this specification. There are no plans to remove deprecated
+features from the specification to ensure backwards compatability for
+implementations dating back to 2013. Test vectors still need to be added
+for the new algorithms and digital signature types such as EdDSA25519.
   </t>
   <t>
 This specification is a joint work product of the
@@ -190,7 +197,7 @@ intermediate system can confirm that the original intent of the sender
 is preserved, and including a Digest header can also verify the message
 body is not modified. This allows any recipient to easily confirm both
 the sender's identity, and any incidental or malicious changes that alter
-the content or meaning of the message. 
+the content or meaning of the message.
    </t>
   </section>
 
