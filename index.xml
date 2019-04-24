@@ -10,6 +10,7 @@
   <!ENTITY rfc6749 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY rfc7230 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
   <!ENTITY rfc7235 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml">
+  <!ENTITY x9.62 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.X9.62.xml">
   <!ENTITY jwa SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
@@ -178,10 +179,13 @@ The following section details the signature parameters.
 
     <section anchor="keyId" title="keyId">
      <t>
-REQUIRED.  The `keyId` field is an opaque string that the server can use to look
-up the component they need to validate the signature.  It could be an SSH key
-fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management
+REQUIRED. The `keyId` field is an opaque string that the server can use to look
+up the component they need to validate the signature. It could be an SSH key
+fingerprint, a URL to machine-readable key data, an LDAP DN, etc. Management
 of keys and assignment of `keyId` is out of scope for this document.
+Implementations MUST be able to discover metadata about the key from the
+`keyId` such that they can determine the type of digital signature algorithm to
+employ when creating or verifying signatures.
      </t>
     </section>
 
@@ -202,15 +206,15 @@ The `signature` parameter is then set to the base 64 encoding of the signature.
      <t>
 RECOMMENDED. The `algorithm` parameter is used to specify the signature
 string construction mechanism. Valid values for this parameter can be found in
-the <eref target="#sa-registry">Signature Algorithms Registry</eref> and MUST
-NOT be marked "deprecated". Implementers SHOULD derive the digital signature
-algorithm used by an implementation from the key metadata identified by the
-`keyId` rather than from this field. If `algorithm` is provided and differs from
-the key metadata identified by the `keyId`, for example `rsa-sha256` but an
-EdDSA key is identified via `keyId`, then an implementation MUST produce an
-error. Implementers should note that previous versions of the
+the <eref target="#hsa-registry">HTTP Signatures Algorithms Registry</eref> and
+MUST NOT be marked "deprecated". Implementers SHOULD derive the digital
+signature algorithm used by an implementation from the key metadata identified
+by the `keyId` rather than from this field. If `algorithm` is provided and
+differs from the key metadata identified by the `keyId`, for example
+`rsa-sha256` but an EdDSA key is identified via `keyId`, then an implementation
+MUST produce an error. Implementers should note that previous versions of the
 `algorithm` parameter did not use the key information to derive the digital
-signature type and thus could be utilized by attackers to create security
+signature type and thus could be utilized by attackers to expose security
 vulnerabilities.
      </t>
     </section>
@@ -408,14 +412,16 @@ digital signature algorithm.
    </t>
 
    <t>
-For example, assume that the `algorithm` value was "rsa-sha256". This would
-signal to the application that the data associated with `keyId` is an
-RSA Private Key (as defined in <xref target="RFC3447">RFC 3447</xref>), the
-signature string hashing function is SHA-256, and the signing
-algorithm is the one defined in <xref target="RFC3447">RFC 3447</xref>,
-Section <eref target="http://tools.ietf.org/html/rfc3447#section-8.2.1">
-Section 8.2.1</eref>. The result of the signature creation algorithm
-specified in <xref target="RFC3447">RFC 3447</xref> should result in a
+For example, assume that the `algorithm` value is "hs2019" and the
+`keyId` refers to an EdDSA public key. This would signal to the application
+that the signature string construction mechanism is the one
+defined in <eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref>,
+the signature string hashing function is SHA-512, and the signing
+algorithm is Ed25519 as defined in
+<xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
+and Ed25519. The result of the signature creation algorithm should result in a
 binary string, which is then base 64 encoded and placed into the
 `signature` value.
    </t>
@@ -436,29 +442,30 @@ algorithm to recreate the signature.
 The `algorithm`, `keyId`, and base 64 decoded `signature` listed in the
 signature parameters are then used to verify the authenticity of the
 digital signature. Note: The application verifying the signature MUST derive
-the `algorithm` from the metadata associated with the `keyId` and MUST NOT
-use the value of `algorithm` from the signed message.
+the digital signature algorithm from the metadata associated with the
+`keyId` and MUST NOT use the value of `algorithm` from the signed message.
      </t>
     </list>
    </t>
    <t>
 If a header specified in the `headers` value of the signature parameters
 (or the default item `(created)` where the `headers` value is not supplied)
-is absent from the message, the message MUST NOT be considered valid.
+is absent from the message, the implementation MUST produce an error.
    </t>
 
    <t>
-For example, assume that the `algorithm` value was "rsa-sha256". This would
-signal to the application that the metadata associated with `keyId` will
-express a RSA Public Key (as defined in <xref target="RFC3447">RFC 3447</xref>),
-the signature string hashing function of SHA-256, and the `signature`
-verification algorithm to use to verify the signature is the one defined in
-<xref target="RFC3447">RFC 3447</xref>, Section <eref
-target="http://tools.ietf.org/html/rfc3447#section-8.2.2">
-Section 8.2.2</eref>. The result of the signature verification algorithm
-specified in <xref target="RFC3447">RFC 3447</xref> should result in a
-successful verification unless the headers protected by the signature were
-tampered with in transit.
+For example, assume that the `algorithm` value was "hs2019" and
+and the `keyId` refers to an EdDSA public key. This would signal to the
+application that the signature string construction mechanism is the one
+defined in <eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref>,
+the signature string hashing function is SHA-512, and the signing
+algorithm is Ed25519 as defined in
+<xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
+and Ed25519.  The result of the signature verification algorithm should
+result in a successful verification unless the headers protected by the
+signature were tampered with in transit.
    </t>
 
   </section>
@@ -529,7 +536,7 @@ HTTP/1.1 401 Unauthorized
 Date: Thu, 08 Jun 2014 18:32:30 GMT
 Content-Length: 1234
 Content-Type: text/html
-WWW-Authenticate: Signature realm="Example",headers="(request-target) date"
+WWW-Authenticate: Signature realm="Example",headers="(request-target) (created)"
 
 ...
 </artwork>
@@ -543,9 +550,9 @@ WWW-Authenticate: Signature realm="Example",headers="(request-target) date"
 The authorization header and signature would be generated as:
     <figure>
      <artwork>
-Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-target) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"</artwork>
+Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
+headers="(request-target) (created) host digest content-length",
+signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
 
@@ -554,8 +561,8 @@ The client would compose the signing string as:
     <figure>
      <artwork>
 (request-target): post /foo\n
+(created): 1402174295
 host: example.org\n
-date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18</artwork>
     </figure>
@@ -570,9 +577,9 @@ For an RSA-based signature, the authorization header and signature would then
 be generated as:
     <figure>
      <artwork>
-Authorization: Signature keyId="rsa-key-1",algorithm="rsa-sha256",
-headers="(request-target) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"</artwork>
+Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
+headers="(request-target) (created) host digest content-length",
+signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
   </section>
@@ -584,22 +591,22 @@ For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
-Authorization: Signature keyId="hmac-key-1",algorithm="hmac-sha256",
-headers="(request-target) host date digest content-length",
-signature="Base64(HMAC-SHA256(signing string))"
+Authorization: Signature keyId="hmac-key-1",algorithm="hs2019",
+headers="(request-target) (created) host digest content-length",
+signature="Base64(HMAC-SHA512(signing string))"
      </artwork>
     </figure>
    </t>
 
    <t>
 The only difference between the RSA Example and the HMAC Example is the
-signature algorithm that is used. The client would compose the signing string
-in the same way as the RSA Example above:
+digital signature algorithm that is used. The client would compose the
+signing string in the same way as the RSA Example above:
     <figure>
      <artwork>
 (request-target): post /foo\n
+(created): 1402174295
 host: example.org\n
-date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18
      </artwork>
@@ -663,8 +670,8 @@ The "hmac-key-1" keyId refers to key known to the client and server.
 The signature header and signature would be generated as:
     <figure>
      <artwork>
-Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
+Signature: keyId="rsa-key-1",algorithm="hs2019",
+created=1402170695, expires=1402170995,
 headers="(request-target) host date digest content-length",
 signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
@@ -675,8 +682,9 @@ The client would compose the signing string as:
     <figure>
      <artwork>
 (request-target): post /foo\n
+(created): 1402170695
+(expires): 1402170995
 host: example.org\n
-date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18</artwork>
     </figure>
@@ -691,10 +699,10 @@ For an RSA-based signature, the authorization header and signature would then
 be generated as:
     <figure>
      <artwork>
-Signature: keyId="rsa-key-1",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
-headers="(request-target) host date digest content-length",
-signature="Base64(RSA-SHA256(signing string))"</artwork>
+Signature: keyId="rsa-key-1",algorithm="hs2019",
+date=1402170695, expires=1402170995,
+headers="(request-target) (created) (expires) host digest content-length",
+signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
   </section>
@@ -706,10 +714,10 @@ For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
-Signature: keyId="hmac-key-1",algorithm="hmac-sha256",
-date=1402170695, expires=1402170699,
-headers="(request-target) host date digest content-length",
-signature="Base64(HMAC-SHA256(signing string))"</artwork>
+Signature: keyId="hmac-key-1",algorithm="hs2019",
+date=1402170695, expires=1402170995,
+headers="(request-target) (created) (expires) host digest content-length",
+signature="Base64(HMAC-SHA512(signing string))"</artwork>
     </figure>
    </t>
 
@@ -720,8 +728,9 @@ in the same way as the RSA Example above:
     <figure>
      <artwork>
 (request-target): post /foo\n
+(created): 1402170695
+(expires): 1402170995
 host: example.org\n
-date: Tue, 07 Jun 2014 20:51:35 GMT\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18
      </artwork>
@@ -994,21 +1003,12 @@ Notes (optional): The Signature scheme is designed for clients to
 authenticate themselves with a server.
    </t>
   </section>
-  <section anchor="sa-registry" title="Signature Algorithms Registry (Historical)">
+  <section anchor="hsa-registry" title="HTTP Signatures Algorithms Registry">
    <t>
-IMPORTANT:
-Older versions of this specification assumed the creation of a signature
-algorithm registry. The specification of signature algorithms via the
-`algorithm` property are expected to be deprecated in the near future
-due to security concerns. As such, this entire section only remains for
-historical purposes and is expected to be removed from the specification
-in its entirety before the finalization of this document.
-   </t>
-   <t>
-The following initial entries should be added to the Signature Algorithm
+The following initial entries should be added to the Canonicalization Algorithms
 Registry to be created and maintained at (the suggested URI)
-<eref target="http://www.iana.org/assignments/signature-algorithms">
-http://www.iana.org/assignments/signature-algorithms</eref>:
+<eref target="http://www.iana.org/assignments/shm-algorithms">
+http://www.iana.org/assignments/shm-algorithms</eref>:
    </t>
    <t>
 Editor's note: The references in this section are problematic as many of the
@@ -1019,26 +1019,72 @@ specifications, leaving implementers to connect the dots (which are not that
 hard to connect).
    </t>
    <t>
+Algorithm Name: hs2019<vspace/>
+Status: active<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
+<eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
+SHA-512 (SHA-2 with 512-bits of digest output)<vspace/>
+Digital Signature Algorithm: Derived from metadata associated with `keyId`.
+Recommend support for
+<xref target="RFC8017">RFC 8017</xref>, Section 8.1: RSASSA-PSS,
+<xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs,
+<xref target="X9.62">ANSI X9.62-2005</xref> ECDSA, P-256, and
+<xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
+and Ed25519.
+   </t>
+   <t>
 Algorithm Name: rsa-sha1<vspace/>
-Reference: <xref target="RFC6376">RFC 6376</xref>, Section 3.3.1<vspace/>
-Status: deprecated
+Status: deprecated, SHA-1 not secure.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
+<eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
+SHA-1 (SHA-1 with 160-bits of digest output)<vspace/>
+Digital Signature Algorithm:
+  <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/>
    </t>
    <t>
 Algorithm Name: rsa-sha256<vspace/>
-Reference: <xref target="RFC6376">RFC 6376</xref>, Section 3.3.2<vspace/>
-Status: active
+Status: deprecated, specifying signature algorithm enables attack
+vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
+<eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
+SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Digital Signature Algorithm:
+  <xref target="RFC8017">RFC 8017</xref>,  Section 8.1: RSASSA-PSS<vspace/>
    </t>
    <t>
 Algorithm Name: hmac-sha256<vspace/>
-Reference: HS256 in <xref target="I-D.ietf-jose-json-web-algorithms">
-JOSE JSON Web Algorithms</xref>, Section 3.2<vspace/>
-Status: active
+Status: deprecated, specifying signature algorithm enables attack
+vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
+<eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
+SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Message Authentication Code Algorithm:
+  <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs<vspace/>
    </t>
    <t>
 Algorithm Name: ecdsa-sha256<vspace/>
-Reference: ES256 in <xref target="I-D.ietf-jose-json-web-algorithms">
-JOSE JSON Web Algorithms</xref>, Section 3.4<vspace/>
-Status: active
+Status: deprecated, specifying signature algorithm enables attack
+vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
+<eref target="#canonicalization">
+  Section 2.3: Signature String Construction
+</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
+SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Digital Signature Algorithm:
+  <xref target="X9.62">ANSI X9.62-2005</xref> ECDSA, P-256<vspace/>
    </t>
   </section>
 
