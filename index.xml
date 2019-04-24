@@ -13,7 +13,6 @@
   <!ENTITY rfc7235 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml">
   <!ENTITY rfc8017 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8017.xml">
   <!ENTITY rfc8032 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8032.xml">
-  <!ENTITY x9.62 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.X9.62.xml">
   <!ENTITY jwa SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="rfc2629.xsl" ?>
@@ -413,7 +412,7 @@ If value is not the last value then append an ASCII newline `\n`.
 
    <t>
 To illustrate the rules specified above, assume a `headers` parameter list
-with the value of `(request-target) (created) (expires) host date cache-control
+with the value of `(request-target) (created) host date cache-control
 x-emptyheader x-example` with the following HTTP request headers:
 
     <figure>
@@ -437,7 +436,6 @@ For the HTTP request headers above, the corresponding signature string is:
      <artwork>
 (request-target): get /foo
 (created): 1402170695
-(expires): 1402170995
 host: example.org
 date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
@@ -598,7 +596,8 @@ HTTP/1.1 401 Unauthorized
 Date: Thu, 08 Jun 2014 18:32:30 GMT
 Content-Length: 1234
 Content-Type: text/html
-WWW-Authenticate: Signature realm="Example",headers="(request-target) (created)"
+WWW-Authenticate: Signature
+  realm="Example",headers="(request-target) (created)"
 
 ...
 </artwork>
@@ -774,10 +773,9 @@ For an RSA-based signature, the authorization header and signature would then
 be generated as:
     <figure>
      <artwork>
-Signature: keyId="rsa-key-1",algorithm="hs2019",
-date=1402170695, expires=1402170995,
-headers="(request-target) (created) (expires) host digest content-length",
-signature="Base64(RSA-SHA512(signing string))"</artwork>
+Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
+  headers="(request-target) (created) host digest content-length",
+  signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
   </section>
@@ -789,10 +787,9 @@ For an HMAC-based signature without a list of headers specified, the
 authorization header and signature would be generated as:
     <figure>
      <artwork>
-Signature: keyId="hmac-key-1",algorithm="hs2019",
-date=1402170695, expires=1402170995,
-headers="(request-target) (created) (expires) host digest content-length",
-signature="Base64(HMAC-SHA512(signing string))"</artwork>
+Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
+  headers="(request-target) (created) host digest content-length",
+  signature="Base64(HMAC-SHA512(signing string))"</artwork>
     </figure>
    </t>
 
@@ -804,7 +801,6 @@ in the same way as the RSA Example above:
      <artwork>
 (request-target): post /foo\n
 (created): 1402170695
-(expires): 1402170995
 host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18
@@ -881,6 +877,10 @@ how to use HTTP Signatures over a unsecured channel like HTTP.
 
  <section anchor="appendix-c" title="Test Values">
   <t>
+WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG. THE NEXT VERSION OF
+THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.
+  </t>
+  <t>
 The following test data uses the following RSA 2048-bit keys,
 which we will refer to as `keyId=Test` in the following samples:
 
@@ -935,7 +935,7 @@ Content-Length: 18
   <section anchor="default-test" title="Default Test">
    <t>
 If a list of headers is not included, the date is the only header that is
-signed by default. The string to sign would be:
+signed by default for rsa-sha256. The string to sign would be:
     <figure>
      <artwork>
 date: Sun, 05 Jan 2014 21:31:40 GMT</artwork>
@@ -958,7 +958,6 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
 signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
 6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
 6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="</artwork>
@@ -984,11 +983,10 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
-headers="(request-target) host date", signature="qdx+H7PHHDZgy4
-y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS2mg2+SbrQDMCJypxBLSPQR2aAjn
-7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3nndiv/x1xSHDJWeSWkx3ButlYSuBs
-kLu6kd9Fswtemr3lgdDEmn04swr2Os0="
+  headers="(request-target) host date",
+  signature="qdx+H7PHHDZgy4y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS
+  2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
+  nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="
     </artwork>
    </figure>
    </t>
@@ -1014,11 +1012,12 @@ The Authorization header would be:
     <figure>
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
-headers="(request-target) host date content-type digest content-length",
-signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
-8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
-ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
+  created=1402170695, expires=1402170699,
+  headers="(request-target) (created) (expires)
+    host date content-type digest content-length",
+  signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
+    8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
+    ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
     </figure>
    </t>
 
@@ -1027,11 +1026,12 @@ The Signature header would be:
     <figure>
      <artwork>
 Signature: keyId="Test",algorithm="rsa-sha256",
-date=1402170695, expires=1402170699,
-headers="(request-target) host date content-type digest content-length",
-signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
-8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
-ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
+  created=1402170695, expires=1402170699,
+  headers="(request-target) (created) (expires)
+    host date content-type digest content-length",
+  signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
+    8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
+    ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</artwork>
     </figure>
    </t>
  </section>
@@ -1070,7 +1070,7 @@ Cory J. Slep,
 Dirk Stein,
 Henry Story,
 Lukasz Szewc,
-Chris Webber, and 
+Chris Webber, and
 Jeffrey Yasskin
   </t>
  </section>
@@ -1116,7 +1116,7 @@ Digital Signature Algorithm: Derived from metadata associated with `keyId`.
 Recommend support for
 <xref target="RFC8017">RFC 8017</xref>, Section 8.1: RSASSA-PSS,
 <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs,
-<xref target="X9.62">ANSI X9.62-2005</xref> ECDSA, P-256, and
+ANSI X9.62-2005 ECDSA, P-256, and
 <xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
 and Ed25519.
    </t>
@@ -1169,7 +1169,7 @@ Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
 Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
 SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
 Digital Signature Algorithm:
-  <xref target="X9.62">ANSI X9.62-2005</xref> ECDSA, P-256<vspace/>
+  ANSI X9.62-2005 ECDSA, P-256<vspace/>
    </t>
   </section>
 
