@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "http://xml.resource.org/authoring/rfc2629.dtd" [
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "https://xml2rfc.tools.ietf.org/authoring/rfc2629.dtd" [
   <!ENTITY rfc2119 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
   <!ENTITY rfc2617 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2617.xml">
   <!ENTITY rfc3230 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3230.xml">
@@ -35,7 +35,7 @@
    </postal>
    <phone>+1 415 400 0626</phone>
    <email>mcavage@gmail.com</email>
-   <uri>http://www.oracle.com/</uri>
+   <uri>https://www.oracle.com/</uri>
   </address>
  </author>
 
@@ -50,7 +50,7 @@
    </postal>
    <phone>+1 540 961 4469</phone>
    <email>msporny@digitalbazaar.com</email>
-   <uri>http://manu.sporny.org/</uri>
+   <uri>https://manu.sporny.org/</uri>
   </address>
  </author>
 
@@ -226,7 +226,7 @@ employ when creating or verifying signatures.
      <t>
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
 as described in <xref target="RFC4648">RFC 4648</xref>,
-<eref target="http://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
+<eref target="https://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
 The client uses the `algorithm` and `headers` signature parameters to form a
 canonicalized `signing string`.  This `signing string` is then signed with the
 key associated with `keyId` and the algorithm corresponding to `algorithm`.
@@ -371,7 +371,7 @@ name followed with an ASCII colon `:`, an ASCII space ` `, and the header
 field value. Leading and trailing optional whitespace (OWS) in the header field
 value MUST be omitted (as specified in
 <xref target="RFC7230">RFC7230</xref>,
-<eref target="http://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>).
+<eref target="https://tools.ietf.org/html/rfc7230#section-3.2.4">Section 3.2.4</eref>).
        <list style="numbers">
          <t>
 If there are multiple instances of the same header field, all header field
@@ -380,7 +380,7 @@ ASCII comma and an ASCII space `, `, and used in the order in which
 they will appear in the transmitted HTTP message.
          </t>
          <t>
-If the header value (after removing leading and trailing whitepspace)
+If the header value (after removing leading and trailing whitespace)
 is a zero-length string, the signature string line correlating with that header
 will simply be the (lowercased) header name, an ASCII colon `:`,
 and an ASCII space ` `.
@@ -538,7 +538,7 @@ signing algorithm.
 The client is expected to send an Authorization header
 (as defined in
 <xref target="RFC7235">RFC 7235</xref>, <eref
-target="http://tools.ietf.org/html/draft-ietf-rfc7235-auth-25#section-4.1">
+target="https://tools.ietf.org/html/rfc7235#section-2.1">
 Section 4.1</eref>) where the "auth-scheme" is "Signature" and the
 "auth-param" parameters meet the requirements listed in
 Section 2: The Components of a Signature.
@@ -564,7 +564,7 @@ Content-Length: 18
    <t>
 Note that the use of the `Digest` header field is per
 <xref target="RFC3230">RFC 3230</xref>, <eref
-target="http://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
+target="https://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
 and is included merely as a demonstration of how an implementer could include
 information about the body of the message in the signature.
 The following sections also assume that the "rsa-key-1" keyId asserted by the
@@ -699,17 +699,17 @@ signing algorithm.
 The sender is expected to transmit a header
 (as defined in
 <xref target="RFC7230">RFC 7230</xref>, <eref
-target="http://tools.ietf.org/html/rfc7230#section-3.2">
+target="https://tools.ietf.org/html/rfc7230#section-3.2">
 Section 3.2</eref>) where the "field-name" is "Signature", and the "field-value"
 contains one or more "auth-param"s (as defined in
 <xref target="RFC7235">RFC 7235</xref>, <eref
-target="http://tools.ietf.org/html/rfc7235#section-4.1">
+target="https://tools.ietf.org/html/rfc7235#section-4.1">
 Section 4.1</eref>) where the "auth-param" parameters meet the requirements
 listed in Section 2: The Components of a Signature.
    </t>
 
    <t>
-The rest if this section uses the following HTTP request as an example.
+The rest of this section uses the following HTTP request as an example.
 
     <figure>
      <artwork>
@@ -855,8 +855,8 @@ If extensions to this specification are made by adding new Signature
 Parameters, those extension parameters MUST be registered in the
 Signature Authentication Scheme Registry. The registry will be created and
 maintained at (the suggested URI)
-<eref target="http://www.iana.org/assignments/http-auth-scheme-signature">
-http://www.iana.org/assignments/http-auth-scheme-signature</eref>. An
+<eref target="https://www.iana.org/assignments/http-auth-scheme-signature">
+https://www.iana.org/assignments/http-auth-scheme-signature</eref>. An
 example entry in this registry is included below:
 
    <figure>
@@ -1058,8 +1058,8 @@ Dirk Stein.
   <section anchor="iana-scheme" title="Signature Authentication Scheme">
    <t>
 The following entry should be added to the Authentication Scheme Registry
-located at <eref target="http://www.iana.org/assignments/http-authschemes">
-http://www.iana.org/assignments/http-authschemes</eref>
+located at <eref target="https://www.iana.org/assignments/http-authschemes">
+https://www.iana.org/assignments/http-authschemes</eref>
    </t>
    <t>
 Authentication Scheme Name: Signature<vspace/>
@@ -1072,8 +1072,8 @@ authenticate themselves with a server.
    <t>
 The following initial entries should be added to the Canonicalization Algorithms
 Registry to be created and maintained at (the suggested URI)
-<eref target="http://www.iana.org/assignments/shm-algorithms">
-http://www.iana.org/assignments/shm-algorithms</eref>:
+<eref target="https://www.iana.org/assignments/shm-algorithms">
+https://www.iana.org/assignments/shm-algorithms</eref>:
    </t>
    <t>
 Editor's note: The references in this section are problematic as many of the
