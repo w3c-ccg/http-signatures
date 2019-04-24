@@ -6,10 +6,13 @@
   <!ENTITY rfc3447 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3447.xml">
   <!ENTITY rfc4648 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
+  <!ENTITY rfc6234 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml">
   <!ENTITY rfc6376 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6376.xml">
   <!ENTITY rfc6749 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY rfc7230 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
   <!ENTITY rfc7235 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml">
+  <!ENTITY rfc8017 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8017.xml">
+  <!ENTITY rfc8032 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8032.xml">
   <!ENTITY x9.62 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.X9.62.xml">
   <!ENTITY jwa SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-jose-json-web-algorithms-20.xml">
 ]>
@@ -816,19 +819,18 @@ content-length: 18
 </middle>
 <back>
  <references title="Normative References">
-  &rfc2119;
   &rfc4648;
-  &rfc6376;
   &rfc7230;
   &rfc7235;
-  &jwa;
  </references>
  <references title="Informative References">
   &rfc2617;
   &rfc3230;
-  &rfc3447;
   &rfc5246;
+  &rfc6234;
   &rfc6749;
+  &rfc8017;
+  &rfc8032;
  </references>
 
  <section anchor="appendix-a" title="Security Considerations">
@@ -1042,8 +1044,13 @@ Mark Adamcin,
 Mark Allen,
 Paul Annesley,
 Karl Böhlmark,
+Stéphane Bortzmeyer,
+Sarven Capadisli,
+Liam Dennehy,
+ductm54,
 Stephen Farrell,
 Phillip Hallam-Baker,
+Eric Holmes,
 Andrey Kislyuk,
 Adam Knight,
 Dave Lehn,
@@ -1054,11 +1061,17 @@ Mark Nottingham,
 Yoav Nir,
 Adrian Palmer,
 Lucas Pardue,
+Roberto Polli,
 Julian Reschke,
 Michael Richardson,
+Wojciech Rygielski,
 Adam Scarr,
-and
-Dirk Stein.
+Cory J. Slep,
+Dirk Stein,
+Henry Story,
+Lukasz Szewc,
+Chris Webber, and 
+Jeffrey Yasskin
   </t>
  </section>
  <section anchor="appendix-d" title="IANA Considerations">
