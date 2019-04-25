@@ -191,7 +191,7 @@ server with or without prior knowledge of each other.
 
   <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
    <t>
-HTTP messages are routinely altered as they traverse the infrastrcture of the
+HTTP messages are routinely altered as they traverse the infrastructure of the
 Internet, for mostly benign reasons. Gateways and proxies add, remove and
 alter headers for operational reasons, so a sender cannot rely on the
 recipient receiving exactly the message transmitted.
