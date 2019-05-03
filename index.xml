@@ -1147,7 +1147,7 @@ Canonicalization Algorithm: [RFC_THIS_DOCUMENT],
 Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>,
 SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
 Digital Signature Algorithm:
-  <xref target="RFC8017">RFC 8017</xref>,  Section 8.1: RSASSA-PSS<vspace/>
+  <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/>
    </t>
    <t>
 Algorithm Name: hmac-sha256<vspace/>
