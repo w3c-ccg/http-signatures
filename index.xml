@@ -220,6 +220,26 @@ both schemes.
 The following section details the Signature Parameters.
     </t>
 
+   <section anchor="v" title="v">
+     <t>
+OPTIONAL. The `v` field is a string denoting the implemented version
+of this specification. This enables the protocol to evolve, changing
+eg. the signature string specification or the supported algorithms and 
+parameters, in a backward-compatible way. The string value is "http-signatures-1".
+For backward compatibility, if this parameter is not present the Signature String 
+construction and the available parameters are left to the implementors. 
+
+Note: RFC EDITOR PLEASE DELETE THIS NOTE; The implementation of the final RFC 
+MUST use this context string, but implementations of drafts MUST NOT use it 
+and MUST use another draft-specific string beginning with "http-signatures-" instead,
+eg. "http-signatures-1-draft-11".
+This ensures that signers can predict how their signatures will be used.
+If this field is not present, the Signature String construction should be 
+taken from http-signatures-draft-10.
+     </t>
+    </section>
+
+     
     <section anchor="keyId" title="keyId">
      <t>
 REQUIRED. The `keyId` field is an opaque string that the server can use to look
@@ -294,6 +314,10 @@ single space character. If not specified, implementations MUST operate as if
 the field were specified with a single value, `(created)`, in the list
 of HTTP headers. Note:
         <list style="numbers">
+           <t>The meta-header `(v)` corrisponding to the version parameter should not
+be specified between the `headers`. This is because if it's present it should always
+be added and validated.
+           </t>
            <t>The list order is important, and MUST be specified in
 the order the HTTP header field-value pairs are concatenated together
 during <xref target="canonicalization">Signature String Construction</xref>
@@ -347,6 +371,9 @@ include the `(request-target)` and `(created)` header fields if `algorithm` does
 not start with `rsa`, `hmac`, or `ecdsa`. Otherwise, `(request-target)` and
 `date` SHOULD be included in the signature.
    </t>
+   <t>
+If present, the `(v)` parameter is always the first header included.
+   </t>  
    <t>
 To include the HTTP request target in the signature calculation, use the
 special `(request-target)` header field name. To include the signature
