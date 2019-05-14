@@ -239,7 +239,7 @@ as described in <xref target="RFC4648">RFC 4648</xref>,
 <eref target="https://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
 The client uses the `headers` Signature Parameter to form a
 canonicalized `signing string`. This `signing string` is then signed using the key
-from the keyId and the digital signature algorithm specified in the key's metadata.
+associated with the `keyId` according to its digital signature algorithm.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
