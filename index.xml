@@ -277,7 +277,7 @@ Header such as when operating in certain web browser environments.
     <section anchor="expires" title="expires">
      <t>
 OPTIONAL.  The `expires` field expresses when the signature ceases to be valid.
-The value MUST be a Unix timestamp integer value. A signatures with an
+The value MUST be a Unix timestamp integer value. A signature with an
 `expires` timestamp value that is in the past MUST NOT be processed. Using
 a Unix timestamp simplifies processing and avoid timezone management existing
 in RFC3339. Subsecod precision is allowed using decimal notation.
