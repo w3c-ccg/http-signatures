@@ -237,9 +237,9 @@ employ when creating or verifying signatures.
 REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
 as described in <xref target="RFC4648">RFC 4648</xref>,
 <eref target="https://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
-The client uses the `algorithm` and `headers` Signature Parameters to form a
-canonicalized `signing string`.  This `signing string` is then signed with the
-key associated with `keyId` and the algorithm corresponding to `algorithm`.
+The client uses the `headers` Signature Parameters to form a
+canonicalized `signing string`. This `signing string` is then signed using the key
+from the keyId and the digital signature algorithm specified in the key's metadata.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
