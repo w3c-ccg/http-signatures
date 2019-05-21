@@ -231,11 +231,11 @@ construction and the available parameters are left to the implementors.
 
 Note: RFC EDITOR PLEASE DELETE THIS NOTE; The implementation of the final RFC 
 MUST use this context string, but implementations of drafts MUST NOT use it 
-and MUST use another draft-specific string beginning with "http-signatures-" instead,
-eg. "http-signatures-1-draft-11".
+and MUST use another draft-specific string beginning with "draft-cavage-http-signatures-" instead,
+eg. "draft-cavage-http-signatures-11".
 This ensures that signers can predict how their signatures will be used.
 If this field is not present, the Signature String construction should be 
-taken from http-signatures-draft-10.
+taken from draft-cavage-http-signatures-11.
      </t>
     </section>
 
