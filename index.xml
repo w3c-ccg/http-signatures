@@ -357,7 +357,7 @@ not start with `rsa`, `hmac`, or `ecdsa`. Otherwise, `(request-target)` and
    </t>
    <t>
 Additionally implementers SHOULD at minimum
-include the `(response-code)` header field in HTTP responses.
+include the `(response-status)` header field in HTTP responses.
    </t>
    <t>
 To include the HTTP request target in the signature calculation, use the
