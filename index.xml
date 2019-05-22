@@ -109,7 +109,7 @@ or be sent to
  <section anchor="intro" title="Introduction">
   <t>
 This protocol extension is intended to provide a simple and standard way for
-clients to sign HTTP messages.
+clients to sign developer-specified portions of HTTP messages.
   </t>
 
   <t>
