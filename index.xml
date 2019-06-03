@@ -300,10 +300,8 @@ during <xref target="canonicalization">Signature String Construction</xref>
 used during signing and verifying.
            </t>
            <t>
-A `headers` parameter value without any headers MAY be provided,
-but since it results in a signature of an empty string it is of almost no
-utility and SHOULD NOT be used. This is distinct from not specifying
-a `headers` parameter at all.
+A zero-length `headers` parameter value MUST NOT be used,
+since it results in a signature of an empty string. 
            </t>
         </list>
      </t>
