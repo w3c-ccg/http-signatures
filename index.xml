@@ -1003,6 +1003,8 @@ the HTTP request would result in the following signing string:
     <figure>
      <artwork>
 (request-target): post /foo?param=value&amp;pet=dog
+(created): 1402170695
+(expires): 1402170699
 host: example.com
 date: Sun, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
