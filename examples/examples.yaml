@@ -1,0 +1,51 @@
+#
+# Examples in the spec
+#
+- name: Default Test
+  url: https://tools.ietf.org/html/draft-cavage-http-signatures-11#appendix-C.1
+  signature_string: >-
+    date: Sun, 05 Jan 2014 21:31:40 GMT
+  parameters:
+    keyId: Test
+    algorithm: rsa-sha256
+    signature: |-
+      e2Jwiqw6NYMaLpa2O+zYHfYc0XeLdjCvp9+sO53ahux9YlcU+EFi/P78075S+Qmh2ZbFai0h0/XO
+      Muvzzjl2NwXIzYm22Ew4sculMDgv/tiowY76We6fBtBvr/CLZgNq5gXJJgOR7B7zdNfoJW6VXu/w
+      kbkBHM0665wazTJayX0=
+
+- name: Basic Test
+  url: https://tools.ietf.org/html/draft-cavage-http-signatures-11#appendix-C.2
+  signature_string: |-
+    (request-target): post /foo?param=value&pet=dog
+    host: example.com
+    date: Sun, 05 Jan 2014 21:31:40 GMT
+  parameters:
+    keyId: Test
+    algorithm: rsa-sha256
+    headers: "(request-target) host date"
+    signature: |-
+      csYZcScBeECFwhv3E1l9HrxE2kjgbl4BuaDsVMblBgXND78FuO45LkJ36jfoPAFLaKVxwXPx9MvU
+      sEMs5PdYl2KPYMA04+M43gmgJ4tXAIxeBQYxP982BMe0tr3PZChdFS7MM8ZNevbYfkbX6i4BkY0H
+      1ot73c4sD3XZDUnyh1I=
+
+- name: All Headers Test
+  url: https://tools.ietf.org/html/draft-cavage-http-signatures-11#appendix-C.3
+  signature_string: |-
+    (request-target): post /foo?param=value&pet=dog
+    host: example.com
+    date: Sun, 05 Jan 2014 21:31:40 GMT
+    content-type: application/json
+    digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+    content-length: 18
+  parameters:
+    keyId: Test
+    algorithm: rsa-sha256
+    created: 1402170695
+    expires: 1402170699
+    headers: >-
+      (request-target) (created) (expires)
+      host date content-type digest content-length
+    signature: |-
+      pAfsq26f5LRUOzrApgviIjc0PRlmd4V2z3tO9omux/KRfAODT4mN6iHAePEHjaiH+4aGQL7Tlmal
+      jUshEpccTje+fi3ihFEx8ty+1J1MiSP/jLK0bGnvKfxcx3/2kENjWj7Dkk3xQRRQFjD3VhWhXlL9
+      i9zF7wIDMG21suo4lLE=
