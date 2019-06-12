@@ -27,7 +27,7 @@ def test_sign_verify():
 
 
 def test_generate_signatures():
-    for test in tests:
+    for test in tests['examples']:
         parameters = test["parameters"]
 
         # If a valid signature is provided, just validate it
