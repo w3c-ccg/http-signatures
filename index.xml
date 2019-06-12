@@ -108,8 +108,8 @@ or be sent to
 
  <section anchor="intro" title="Introduction">
   <t>
-This protocol extension is intended to provide a simple and standard way for
-clients and servers to sign developer-specified portions of HTTP messages.
+This protocol extension provides a simple and standard way for
+senders to sign developer-specified headers of an HTTP message.
   </t>
 
   <t>
