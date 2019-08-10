@@ -357,7 +357,10 @@ value by concatenating the lowercased :method, an ASCII space, and
 the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
 Note: For the avoidance of doubt, lowercasing only applies to the :method
-pseudo-header and not to the :path pseudo-header.
+pseudo-header and not to the :path pseudo-header. The :path pseudo-header
+is included in the Signature String as transmitted or received by the
+underlying transport: after urlencoding/escaping by the sender, and before
+urlencoding/escaping by the receiver.
      </t>
      <t>
 If the header field name is `(created)` and the `algorithm`
