@@ -390,10 +390,8 @@ ASCII comma and an ASCII space `, `, and used in the order in which
 they will appear in the transmitted HTTP message.
          </t>
          <t>
-If the header value (after removing leading and trailing whitespace)
-is a zero-length string, the signature string line correlating with that header
-will simply be the (lowercased) header name, an ASCII colon `:`,
-and an ASCII space ` `.
+A header field MUST NOT refer to a header value that is a zero-length string
+(after removing leading and trailing whitespace).
          </t>
          <t>
 Any other modification to
