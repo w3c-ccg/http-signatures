@@ -29,13 +29,13 @@ verify digital signatures of HTTP Messages in a platform-agnostic way
 
 ## Simple and Compatible
 
-This protocol should comply fully with the state of HTTP except where
+- This specification should comply fully with the state of HTTP except where
 compliance would introduce security concerns.
 
-- If HTTP does or permits something, this protocol should allow it to be
+  - If HTTP does or permits something, this protocol should allow it to be
   signed.
 
-  - This means we also support things that are there for legacy reasons or
+  - This means we also support things that present for legacy reasons or
     perhaps don't seem like an obviously good idea, unless there is a good
     (especially security) reason not to.
 
@@ -48,3 +48,9 @@ compliance would introduce security concerns.
 
 - This specification must not apply new interpretations to existing
   concepts and terms
+
+- This specification should be simple enough for non-specialists to
+  understand and recognise the core concepts, allowing them to make informed
+  choices on how it can/should be used, while also specific enough that
+  implementers can unambiguously understand how to produce and verify a
+  signature safely and effectively.
