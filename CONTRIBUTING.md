@@ -39,7 +39,7 @@ compliance would introduce security concerns.
     perhaps don't seem like an obviously good idea, unless there is a good
     (especially security) reason not to.
 
-- Any implementation that does not recognise or support this protocl should
+- Any implementation that does not recognise or support this protocol should
   be able to ignore any signature header safely.
 
 - The specification should avoid wherever possible any aspects requiring
