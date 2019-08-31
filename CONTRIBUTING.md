@@ -20,9 +20,9 @@ First though, take a look at the guiding principles of the project:
 This protocol is meant to provide a technical mechanism to produce and
 verify digital signatures of HTTP Messages in a platform-agnostic way
 
-- The protocol should not be overly specific with a particular implementation,
-  language, runtime or framework. The protocol should work the same way for
-  all.
+- The protocol should not be overly specific with a particular
+  implementation, language, runtime or framework.
+  The protocol should work the same way for all.
 
 - The protocol must be independent of the transport and any security
   mechanisms implemented there e.g. client & server TLS certificates.
@@ -30,22 +30,21 @@ verify digital signatures of HTTP Messages in a platform-agnostic way
 ## Simple and Compatible
 
 This protocol should comply fully with the state of HTTP except where
-compliance would introduce security concerns. Don't re-interperet existing
-definitions or protocols or modify the meanings of established ideas.
+compliance would introduce security concerns.
 
-- If HTTP does or permits something, this protocol should allow it to be signed.
+- If HTTP does or permits something, this protocol should allow it to be
+  signed.
+
   - This means we also support things that are there for legacy reasons or
-  perhaps don't seem like an obviously good idea, unless there is a good
-  (especially security) reason not to.
-  
+    perhaps don't seem like an obviously good idea, unless there is a good
+    (especially security) reason not to.
+
 - Any implementation that does not recognise or support this protocl should
   be able to ignore any signature header safely.
 
-- The specification should avoid wherever possible any aspects requiring negotiation or agreement on parameters.
+- The specification should avoid wherever possible any aspects requiring
+  negotiation or agreement between parties. Out-of-band specification should
+  be relied upon unless critical to security or functionality.
 
-- This specification must not apply new interpretations to existing concepts and terms
-
-
-From Manu:
-
-* Don't break the ecosystem, stay backwards compatible.
+- This specification must not apply new interpretations to existing
+  concepts and terms
