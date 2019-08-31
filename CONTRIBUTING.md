@@ -43,8 +43,9 @@ compliance would introduce security concerns.
   be able to ignore any signature header safely.
 
 - The specification should avoid wherever possible any aspects requiring
-  negotiation or agreement between parties. Out-of-band specification should
-  be relied upon unless critical to security or functionality.
+  negotiation or agreement between parties. Out-of-band specification of
+  permissible parameters, keys etc should be relied upon unless critical to
+  security or functionality.
 
 - This specification must not apply new interpretations to existing
   concepts and terms
