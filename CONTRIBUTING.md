@@ -55,3 +55,17 @@ compliance would introduce security concerns.
   choices on how it can/should be used, while also specific enough that
   implementers can unambiguously understand how to produce and verify a
   signature safely and effectively.
+
+# What You See is What You Sign
+
+- Signatures serve an immediate purpose to authenticate and verify a
+  HTTP message at the point it is received and processed, so the protocol
+  should provide a mechanism to determine the timeliness of a signature
+
+- Signatures may serve an after-the-fact purpose to be able to verify that a
+  request or response was properly verified at some point in the past
+  (auditing)
+
+- To serve both the above purposes, signatures should be verifiable given
+  the information available at that time. Signatures should not rely on
+  information not present in a given message except for the secrets used.
