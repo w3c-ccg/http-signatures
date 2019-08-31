@@ -1,0 +1,14 @@
+language: python
+sudo: false
+python:
+- 3.6
+addons:
+  apt:
+    packages:
+    - python-pip
+
+install:
+- pip install xml2rfc
+script:
+- make text
+- make html
