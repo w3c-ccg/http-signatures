@@ -64,7 +64,8 @@ compliance would introduce security concerns.
 # What You See is What You Sign
 
 - Signatures serve an immediate purpose to authenticate and verify a
-  HTTP message at the point it is received and processed, so the protocol
+  HTTP message as it is processed by intermediaries and eventually received
+  by the target system (client or server), so the protocol
   should provide a mechanism to determine the timeliness of a signature
 
 - Signatures may serve an after-the-fact purpose to be able to verify that a
