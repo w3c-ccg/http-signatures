@@ -18,7 +18,7 @@ First though, take a look at the guiding principles of the project:
 ## Platform, Language & Transport neutrality
 
 This protocol is meant to provide a technical mechanism to produce and
-verify digital signatures of HTTP Messages in a platform-agnostic way
+verify the origin and integrity of HTTP Messages in a platform-agnostic way
 
 - The protocol should not be overly specific with a particular
   implementation, language, runtime or framework.
@@ -26,6 +26,11 @@ verify digital signatures of HTTP Messages in a platform-agnostic way
 
 - The protocol must be independent of the transport and any security
   mechanisms implemented there e.g. client & server TLS certificates.
+
+- While the protocol only protects headers, payload integrity can be assured
+  through inrorporation of other mechanisms such as Digest header. The
+  protocol should not be overly prescriptive of specific techniques but
+  illustrate how implementations might use them to achieve these goals.
 
 ## Simple and Compatible
 
