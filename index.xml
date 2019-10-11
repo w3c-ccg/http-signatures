@@ -312,7 +312,7 @@ since it results in a signature of an empty string.
    <section anchor="ambiguity" title="Ambiguous Parameters">
     <t>
 If any of the parameters listed above are erroneously duplicated in the
-associated header field, then the last parameter defined MUST be used. Any
+associated header field, then the the signature MUST NOT be processed. Any
 parameter that is not recognized as a parameter, or is not well-formed,
 MUST be ignored.
     </t>
