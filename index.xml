@@ -191,7 +191,7 @@ server with or without prior knowledge of each other.
 
   <section anchor="intro-responses" title="Using Signatures in HTTP Responses">
    <t>
-HTTP messages are routinely altered as they traverse the infrastrcture of the
+HTTP messages are routinely altered as they traverse the infrastructure of the
 Internet, for mostly benign reasons. Gateways and proxies add, remove and
 alter headers for operational reasons, so a sender cannot rely on the
 recipient receiving exactly the message transmitted.
@@ -238,8 +238,8 @@ REQUIRED.  The `signature` parameter is a base 64 encoded digital signature,
 as described in <xref target="RFC4648">RFC 4648</xref>,
 <eref target="https://tools.ietf.org/html/rfc4648#section-4">Section 4</eref>.
 The client uses the `algorithm` and `headers` Signature Parameters to form a
-canonicalized `signing string`.  This `signing string` is then signed with the
-key associated with `keyId` and the algorithm corresponding to `algorithm`.
+canonicalized `signing string`. This `signing string` is then signed using the key
+associated with the `keyId` according to its digital signature algorithm.
 The `signature` parameter is then set to the base 64 encoding of the signature.
      </t>
     </section>
@@ -277,7 +277,7 @@ Header such as when operating in certain web browser environments.
     <section anchor="expires" title="expires">
      <t>
 OPTIONAL.  The `expires` field expresses when the signature ceases to be valid.
-The value MUST be a Unix timestamp integer value. A signatures with a
+The value MUST be a Unix timestamp integer value. A signature with an
 `expires` timestamp value that is in the past MUST NOT be processed. Using
 a Unix timestamp simplifies processing and avoid timezone management existing
 in RFC3339. Subsecod precision is allowed using decimal notation.
