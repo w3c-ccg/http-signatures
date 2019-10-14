@@ -575,7 +575,7 @@ Note that the use of the `Digest` header field is per
 <xref target="RFC3230">RFC 3230</xref>, <eref
 target="https://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
 and is included merely as a demonstration of how an implementer could include
-informations about the representation of the resource in the signature.
+information about the representation of the resource in the signature.
 The following sections also assume that the "rsa-key-1" keyId asserted by the
 client is an identifier meaningful to the server.
    </t>
