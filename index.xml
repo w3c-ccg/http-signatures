@@ -74,24 +74,6 @@ message integrity to HTTP messages by using a digital signature.
  </abstract>
  <note title="Feedback">
   <t>
-WARNING: DO NOT IMPLEMENT THIS SPECIFICATION AND PUSH THE CODE INTO PRODUCTION.
-THIS VERSION OF THE SPECIFICATION IS ONLY FOR EXPERIMENTAL IMPLEMENTATIONS.
-  </t>
-  <t>
-This version (draft-cavage-http-signatures-11) is experimental and implementers
-should be aware that a number of new features have been introduced in
-this version that change previous algorithms in subtle but important ways.
-Namely, there is now a backwards-compatible way to modify the signature
-string construction algorithm, as well as two new Signature Parameters to
-enable web browser-based clients to include a signature creation and expiration
-timestamp. The new features are designed to be fully backwards compatible.
-Older features have been deprecated, but are still supported in the algorithms
-described by this specification. There are no plans to remove deprecated
-features from the specification to ensure backwards compatability for
-implementations dating back to 2013. Test vectors still need to be added
-for the new algorithms and digital signature types such as Ed25519.
-  </t>
-  <t>
 This specification is a joint work product of the
 <eref target="https://w3c-dvcg.github.io/">W3C Digital Verification Community Group</eref>
 and the
@@ -301,7 +283,7 @@ used during signing and verifying.
            </t>
            <t>
 A zero-length `headers` parameter value MUST NOT be used,
-since it results in a signature of an empty string. 
+since it results in a signature of an empty string.
            </t>
         </list>
      </t>
