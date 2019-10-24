@@ -184,8 +184,16 @@ body is not modified. This allows any recipient to easily confirm both
 the sender's identity, and any incidental or malicious changes that alter
 the content or meaning of the message.
    </t>
-  </section>
-
+   <t>
+The response signature is also able to encode the status information returned
+by the server. This is important to properly establish the context of the
+response with e.g. response codes 200, 201 &amp; 202 all having different
+meaning and intent even when delivering the same response payload and
+headers. Similarly redirect codes 301, 302, 307 &amp; 308 can have
+significantly different intentions and consequences for interpretation of the
+response.
+   </t>
+</section>
  </section>
 
  <section anchor="components" title="The Components of a Signature">
@@ -321,11 +329,15 @@ Signature String, which is the data that is actually signed.
 In order to generate the string that is signed with a key, the client MUST use
 the values of each HTTP header field in the `headers` Signature Parameter,
 in the order they appear in the `headers` Signature Parameter. It is out of
-scope for this document to dictate what header fields
+scope for this document to dictate which header fields
 an application will want to enforce, but implementers SHOULD at minimum
 include the `(request-target)` and `(created)` header fields if `algorithm` does
 not start with `rsa`, `hmac`, or `ecdsa`. Otherwise, `(request-target)` and
 `date` SHOULD be included in the signature.
+   </t>
+   <t>
+Additionally implementers SHOULD at minimum
+include the `(response-status)` header field in HTTP responses.
    </t>
    <t>
 To include the HTTP request target in the signature calculation, use the
@@ -340,6 +352,13 @@ the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
 Note: For the avoidance of doubt, lowercasing only applies to the :method
 pseudo-header and not to the :path pseudo-header.
+     </t>
+     <t>
+If the header field name is `(response-status)` then the header field value
+is the three-digit :status pseudo-header (as specified in
+<eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.4">HTTP/2, Section 8.1.2.4</eref>).
+Note this field is only valid in a HTTP response. Specifying this header in
+the signature of a HTTP request MUST produce an error.
      </t>
      <t>
 If the header field name is `(created)` and the `algorithm`
