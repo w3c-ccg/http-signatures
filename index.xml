@@ -4,6 +4,7 @@
   <!ENTITY rfc2617 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2617.xml">
   <!ENTITY rfc3230 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3230.xml">
   <!ENTITY rfc3447 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3447.xml">
+  <!ENTITY rfc3986 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml">
   <!ENTITY rfc4648 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml">
   <!ENTITY rfc5246 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc6234 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml">
@@ -339,7 +340,10 @@ value by concatenating the lowercased :method, an ASCII space, and
 the :path pseudo-headers (as specified in
 <eref target="https://tools.ietf.org/html/rfc7540#section-8.1.2.3">HTTP/2, Section 8.1.2.3</eref>).
 Note: For the avoidance of doubt, lowercasing only applies to the :method
-pseudo-header and not to the :path pseudo-header.
+pseudo-header and not to the :path pseudo-header. The :path and :query
+pseudo-headers are included in the Signature String as transmitted or
+received by the underlying transport: after urlencoding/escaping by the
+sender, and before urlencoding/escaping by the receiver.
      </t>
      <t>
 If the header field name is `(created)` and the `algorithm`
@@ -799,6 +803,7 @@ content-length: 18
 </middle>
 <back>
  <references title="Normative References">
+  &rfc3986;
   &rfc4648;
   &rfc7230;
   &rfc7235;
@@ -865,9 +870,10 @@ WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG. THE NEXT VERSION OF
 THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.
   </t>
   <t>
-The following test data uses the following RSA 2048-bit keys,
-which we will refer to as `keyId=Test` in the following samples:
-
+The tests in this appendix us the following RSA 2048-bit keys,
+which we will be referred to as `keyId=Test` in the samples:
+</t>
+<t>
    <figure>
     <artwork>
 -----BEGIN PUBLIC KEY-----
@@ -901,10 +907,12 @@ G6aFKaqQfOXKCyWoUiVknQJAXrlgySFci/2ueKlIE1QqIiLSZ8V8OlpFLRnb1pzI
   </t>
 
   <t>
-All examples use this request:
+All examples in this appendix will use this reference request:
+</t>
+<t>
    <figure>
     <artwork>
-POST /foo?param=value&amp;pet=dog HTTP/1.1
+POST /foo%20bar?test=this%3Dthat&amp;actions=first%26second HTTP/1.1
 Host: example.com
 Date: Sun, 05 Jan 2014 21:31:40 GMT
 Content-Type: application/json
@@ -914,12 +922,31 @@ Content-Length: 18
 {"hello": "world"}
     </artwork>
    </figure>
+   </t>
+   <t>
+      Note that the path and query parameters in the reference request have
+      escaped the following literals to conform with the valid character
+      requirement of the type 'pchar' in 
+      <xref target="RFC3986">RFC 3986</xref>, <eref
+      target="https://tools.ietf.org/html/rfc3986#appendix-A">
+      Appendix A</eref>. As described in <xref target="canonicalization" />,
+      the signature string MUST be created after escaping a message prior
+      to transmission, and before unescaping prior to processing.
+     </t>
+     <t>
+   <figure>
+    <artwork>
+Path:  'foo bar'      => foo%20bar
+Query: 'this=that'    => this%3Dthat
+Query: 'first&amp;second' => first%26second
+    </artwork>
+   </figure>
   </t>
 
   <section anchor="default-test" title="Default Test">
    <t>
 If a list of headers is not included, the date is the only header that is
-signed by default for rsa-sha256. The string to sign would be:
+signed by default for rsa-sha256. The signature string would be:
     <figure>
      <artwork>
 date: Sun, 05 Jan 2014 21:31:40 GMT</artwork>
@@ -952,10 +979,10 @@ signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
   <section anchor="basic-test" title="Basic Test">
    <t>
 The minimum recommended data to sign is the (request-target), host, and date. In
-this case, the string to sign would be:
+this case, the signature string would be:
     <figure>
      <artwork>
-(request-target): post /foo?param=value&amp;pet=dog
+(request-target): post /foo%20bar?test=this%3Dthat&amp;actions=first%26second
 host: example.com
 date: Sun, 05 Jan 2014 21:31:40 GMT
     </artwork>
@@ -968,9 +995,9 @@ The Authorization header would be:
      <artwork>
 Authorization: Signature keyId="Test",algorithm="rsa-sha256",
   headers="(request-target) host date",
-  signature="qdx+H7PHHDZgy4y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS
-  2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
-  nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="
+  signature="RyXtFqKnLCDuy+RdHEZm59xypzUfAeahim81NsxWExNFAJBs+DOcMaQj
+  vW9+uKMl0lNrVFfZzP8eDzZ04UTA7YKaRq+CB9ybTZ3LHZHLlziJL3RmDDFFVZpc63k
+  lPw8Kju7C5ZvsNM7byQdevkqcOTp+6xuESUhHr2TGQfjdsiA="
     </artwork>
    </figure>
    </t>
@@ -979,10 +1006,10 @@ Authorization: Signature keyId="Test",algorithm="rsa-sha256",
   <section anchor="all-headers-test" title="All Headers Test">
    <t>
 A strong signature including all of the headers and a digest of the body of
-the HTTP request would result in the following signing string:
+the HTTP request would result in the following signature string:
     <figure>
      <artwork>
-(request-target): post /foo?param=value&amp;pet=dog
+(request-target): post /foo%20bar?test=this%3Dthat&amp;actions=first%26second
 host: example.com
 date: Sun, 05 Jan 2014 21:31:40 GMT
 content-type: application/json
