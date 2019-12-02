@@ -179,8 +179,8 @@ alter headers for operational reasons, so a sender cannot rely on the
 recipient receiving exactly the message transmitted.
 By allowing a sender to sign specified headers, and recipient or
 intermediate system can confirm that the original intent of the sender
-is preserved, and including a Digest header can also verify the message
-body is not modified. This allows any recipient to easily confirm both
+is preserved, and including a Digest header can also verify that the representation data
+is not modified. This allows any recipient to easily confirm both
 the sender's identity, and any incidental or malicious changes that alter
 the content or meaning of the message.
    </t>
@@ -557,7 +557,7 @@ Note that the use of the `Digest` header field is per
 <xref target="RFC3230">RFC 3230</xref>, <eref
 target="https://tools.ietf.org/html/rfc3230#section-4.3.2">Section 4.3.2</eref>
 and is included merely as a demonstration of how an implementer could include
-information about the body of the message in the signature.
+information about the representation of the resource in the signature.
 The following sections also assume that the "rsa-key-1" keyId asserted by the
 client is an identifier meaningful to the server.
    </t>
@@ -667,7 +667,10 @@ content-length: 18
 The "Signature" HTTP Header provides a mechanism to link the headers of a
 message (client request or server response) to a digital signature. By
 including the "Digest" header with a properly formatted digest,
-the message body can also be linked to the signature. The
+the representation data defined in
+<xref target="RFC7230">RFC 7231</xref>, <eref
+target="https://tools.ietf.org/html/rfc7231#section-3.2">Section 3.2</eref>
+  can also be linked to the signature. The
 signature is generated and verified either using a shared secret (e.g. HMAC)
 or public/private keys (e.g. RSA, EC). This allows the receiver and/or any
 intermediate system to immediately or later verify the integrity of the
@@ -978,7 +981,7 @@ Authorization: Signature keyId="Test",algorithm="rsa-sha256",
 
   <section anchor="all-headers-test" title="All Headers Test">
    <t>
-A strong signature including all of the headers and a digest of the body of
+A strong signature including all of the headers and a digest of the representation data of
 the HTTP request would result in the following signing string:
     <figure>
      <artwork>
