@@ -436,8 +436,7 @@ x-example: Example header with some whitespace.
 In order to create a signature, a client MUST:
     <list style="numbers">
      <t>
-Use the `headers` and `algorithm` values as well as the contents of the HTTP
-message, to create the signature string.
+Use the HTTP headers values to create the signature string.
      </t>
      <t>
 Use the key associated with `keyId` to generate a digital signature on the
