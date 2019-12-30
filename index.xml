@@ -595,7 +595,7 @@ The authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
-  headers="(request-target) (created) host digest content-length",
+  headers="(request-target) (created) host digest content-type content-length",
   signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
@@ -608,6 +608,7 @@ The client would compose the signing string as:
 (created): 1402174295
 host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-type: text/html\n
 content-length: 18</artwork>
     </figure>
 Note that the '\n' symbols above are included to demonstrate where the new
@@ -622,7 +623,7 @@ be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
-headers="(request-target) (created) host digest content-length",
+headers="(request-target) (created) host digest content-type content-length",
 signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
@@ -636,7 +637,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Authorization: Signature keyId="hmac-key-1",algorithm="hs2019",
-headers="(request-target) (created) host digest content-length",
+headers="(request-target) (created) host digest content-type content-length",
 signature="Base64(HMAC-SHA512(signing string))"
      </artwork>
     </figure>
@@ -652,6 +653,7 @@ signing string in the same way as the RSA Example above:
 (created): 1402174295
 host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-type: text/html\n
 content-length: 18
      </artwork>
     </figure>
@@ -730,7 +732,7 @@ The signature header and signature would be generated as:
 Signature: keyId="rsa-key-1",algorithm="hs2019",
   created=1402170695, expires=1402170995,
   headers="(request-target) (created) (expires)
-    host date digest content-length",
+    host date digest content-type content-length",
   signature="Base64(RSA-SHA256(signing string))"</artwork>
     </figure>
    </t>
@@ -744,6 +746,7 @@ The client would compose the signing string as:
 (expires): 1402170995
 host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-type: text/html\n
 content-length: 18</artwork>
     </figure>
 Note that the '\n' symbols above are included to demonstrate where the new
@@ -758,7 +761,7 @@ be generated as:
     <figure>
      <artwork>
 Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
-  headers="(request-target) (created) host digest content-length",
+  headers="(request-target) (created) host digest content-type content-length",
   signature="Base64(RSA-SHA512(signing string))"</artwork>
     </figure>
    </t>
@@ -772,7 +775,7 @@ authorization header and signature would be generated as:
     <figure>
      <artwork>
 Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
-  headers="(request-target) (created) host digest content-length",
+  headers="(request-target) (created) host digest content-type content-length",
   signature="Base64(HMAC-SHA512(signing string))"</artwork>
     </figure>
    </t>
@@ -787,6 +790,7 @@ in the same way as the RSA Example above:
 (created): 1402170695
 host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+content-type: text/html\n
 content-length: 18
      </artwork>
     </figure>
